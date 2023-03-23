@@ -9,9 +9,9 @@
         <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-end">
                 <a class="navbar-item" href="/about">About</a>
-                <a class="navbar-item" href="/contact">Contact</a>
+                <a class="navbar-item" href="/cards">Cards</a>
+                <a class="navbar-item" href="/sets">Sets</a>
                 <a class="navbar-item" href="/login">Login</a>
-                <a class="navbar-item" href="/register">Register</a>
             </div>
         </div>
     </div>
