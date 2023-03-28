@@ -9,9 +9,11 @@
         private $knownQueryKeywords = [
             'name',
             'subtypes',
-            'type',
+            'supertype',
+            'types',
             'nationalPokedexNumbers',
-            'hp'
+            'hp',
+            'rarity'
         ];
 
         /**
@@ -43,7 +45,7 @@
 
                 }
             } else {
-                // Return the parsed query
+                // Return a default query (i.e. search for the name of the card)
                 return [
                     'name' => $query
                 ];
@@ -60,7 +62,14 @@
             // Parse the query
             $parsedQuery = $this->parseQuery($query);
             // Search for cards
-            $cards = Pokemon::Card()->where($parsedQuery)->all();
+            $result = Pokemon::Card()->where($parsedQuery)->all();
+            $cards = [];
+
+            // Get the cards
+            foreach ($result as $card) {
+                array_push($cards, $card->toArray());
+            }
+
             // Return the cards
             return $cards;
         }

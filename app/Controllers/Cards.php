@@ -53,10 +53,17 @@ class Cards extends BaseController {
         // Get the cards
         $cards = $this->pokemonTCGService->search($searchQuery);
         
-        // DEBUG: Show the cards
-        echo '<pre>';
-        print_r($cards);
-        echo '</pre>';
-
+        // Render the view
+        echo view('fragments/html_head', [
+            'title' => 'Search',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('cards/results', [
+            'cards' => $cards
+        ]);
+        return view('fragments/footer');
     }
 }

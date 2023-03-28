@@ -20,6 +20,10 @@ body {
     width: auto;
 }
 
+.left {
+    text-align: left;
+}
+
 /* Navbar */
 .navbar {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -188,4 +192,45 @@ body {
     border-radius: 0 5px 5px 0;
     cursor: pointer;
     font-size: 20px;
+}
+
+/* Card View */
+.card {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+    padding: 1rem;
+    max-width: 30rem;
+}
+
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.card-image {
+    width: 100%;
+    height: 20rem;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.card-info p {
+    margin: 1rem 0;
 }
