@@ -91,5 +91,19 @@
                 'pagination' => $paginationData
             ];
         }
+
+        /**
+         * Get a card by its ID.
+         * 
+         * @param string $id The ID of the card
+         * @return array The card
+         */
+        public function getCard(string $id) : array {
+            // Get the card
+            $card = Pokemon::Card()->find($id);
+
+            // Return the card
+            return $card->toArray();
+        }
     }
 ?>

@@ -32,6 +32,7 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->get('/cards', 'Cards::index');
 $routes->get('/cards/search', 'Cards::search');
+$routes->get('/cards/details/(:any)', 'Cards::details/$1');
 
 /*
  * --------------------------------------------------------------------

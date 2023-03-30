@@ -13,12 +13,14 @@
 <div class="cards container">
     <?php 
         foreach ($cards as $card) : ?>
-        <div class="card">
-            <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
-            <div class="card-info">
-                <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+        <a href="details/<?= $card['id']; ?>" target="_blank">
+            <div class="card">
+                <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
+                <div class="card-info">
+                    <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                </div>
             </div>
-        </div>
+        </a>
     <?php endforeach; ?>
 
     <?php if (count($cards) == 0) : ?>
@@ -27,7 +29,7 @@
 </div>
 
 <div class="cards-table container hide">
-    <table id="card-table">
+    <table id="card-table" class="pretty-table">
         <thead>
             <tr>
                 <th>Image</th>

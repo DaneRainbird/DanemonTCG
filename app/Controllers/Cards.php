@@ -41,7 +41,6 @@ class Cards extends BaseController {
 
     /**
      * Search for cards.
-     * 
      */
     public function search() {
         // Get the search query from the GET params
@@ -88,6 +87,35 @@ class Cards extends BaseController {
             'cards' => $results['cards'],
             'pagination' => $results['pagination'],
             'searchQuery' => $searchQuery
+        ]);
+        return view('fragments/footer');
+    }
+
+    /**
+     * Get the details of a card.
+     * 
+     * @param string $id The card ID
+     */
+    public function details(string $id) {
+        // Get the card
+        $card = $this->pokemonTCGService->getCard($id);
+
+        // Ensure the card exists
+        if (is_null($card)) {
+            // Redirect to the home page
+            return redirect()->to('/');
+        }
+
+        // Render the view
+        echo view('fragments/html_head', [
+            'title' => 'Card Details',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('cards/details', [
+            'card' => $card
         ]);
         return view('fragments/footer');
     }
