@@ -11,7 +11,8 @@
 </div>
 
 <div class="cards container">
-    <?php foreach ($cards as $card) : ?>
+    <?php 
+        foreach ($cards as $card) : ?>
         <div class="card">
             <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
             <div class="card-info">
@@ -19,6 +20,10 @@
             </div>
         </div>
     <?php endforeach; ?>
+
+    <?php if (count($cards) == 0) : ?>
+        <p>No cards found.</p>
+    <?php endif; ?>
 </div>
 
 <div class="cards-table container hide">
@@ -44,6 +49,23 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+</div>
+
+<div class="pagination container">
+    <?php 
+        if (count($cards) !== 0) {
+            $totalPages = $pagination->getTotalPages();
+            $currentPage = $pagination->getPage();
+
+            foreach (range(1, $totalPages) as $page) {
+                if ($page == $currentPage) {
+                    echo '<a class="page-button active" href="search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                } else {
+                    echo '<a class="page-button" href="search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                }
+            }
+        }
+    ?>
 </div>
 
 <script>

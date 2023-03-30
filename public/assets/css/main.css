@@ -328,3 +328,31 @@ select {
     padding: 5px;
     font-size: 1rem;
 }
+
+/* Pagination */
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+.pagination a.active {
+    background-color: #009879;
+    color: white;
+    border: 1px solid #009879;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+

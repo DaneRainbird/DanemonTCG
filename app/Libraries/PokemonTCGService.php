@@ -56,13 +56,28 @@
          * Search for cards.
          * 
          * @param string $query The query to search for
+         * @param int $page The page number
+         * @param int $pageSize The page size
          * @return array The results
          */
-        public function search(string $query) : array {
+        public function search(string $query, int $page = null, int $pageSize = null) : array {
             // Parse the query
             $parsedQuery = $this->parseQuery($query);
+
+            // Check if the page number is valid
+            if ($page < 1 || is_null($page)) {
+                $page = 1;
+            }
+            
+            // Check if the page size is valid
+            if ($pageSize < 1 || is_null($pageSize)) {
+                $pageSize = 25;
+            }
+
             // Search for cards
-            $result = Pokemon::Card()->where($parsedQuery)->all();
+            $result = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->all();
+            $paginationData = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->pagination();
+
             $cards = [];
 
             // Get the cards
@@ -71,7 +86,10 @@
             }
 
             // Return the cards
-            return $cards;
+            return [
+                'cards' => $cards,
+                'pagination' => $paginationData
+            ];
         }
     }
 ?>

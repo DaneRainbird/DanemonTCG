@@ -44,14 +44,37 @@ class Cards extends BaseController {
      * 
      */
     public function search() {
-        // Get the search query
-        $searchQuery = $this->request->getPost('search-value');
+        // Get the search query from the GET params
+        $searchQuery = $this->request->getGet('value');
+
+        // Ensure there is a search query
+        if (is_null($searchQuery)) {
+            // Redirect to the home page
+            return redirect()->to('/');
+        }
 
         // Convert the search query to a string
         $searchQuery = (string) $searchQuery;
 
-        // Get the cards
-        $cards = $this->pokemonTCGService->search($searchQuery);
+        // Get pagination details from the GET params
+        $page = $this->request->getGet('page');
+        $pageSize = $this->request->getGet('pageSize');
+        
+        // Ensure the pagination details are valid
+        if (!is_null($page) && !is_null($pageSize)) {
+            // Convert the pagination details to integers
+            $page = (int) $page;
+            $pageSize = (int) $pageSize;
+
+            // Ensure the pagination details are valid
+            if ($page < 1 || $pageSize < 1) {
+                // Redirect to the home page
+                return redirect()->to('/');
+            }
+        }
+
+        // Get the cards and pagination data
+        $results = $this->pokemonTCGService->search($searchQuery, $page, $pageSize);
         
         // Render the view
         echo view('fragments/html_head', [
@@ -62,7 +85,9 @@ class Cards extends BaseController {
         ]);
         echo view('fragments/header');
         echo view('cards/results', [
-            'cards' => $cards
+            'cards' => $results['cards'],
+            'pagination' => $results['pagination'],
+            'searchQuery' => $searchQuery
         ]);
         return view('fragments/footer');
     }
