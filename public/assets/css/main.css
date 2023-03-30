@@ -20,8 +20,8 @@ body {
     width: auto;
 }
 
-.left {
-    text-align: left;
+.hide {
+    display: none !important;
 }
 
 /* Navbar */
@@ -233,4 +233,92 @@ body {
 
 .card-info p {
     margin: 1rem 0;
+}
+
+/* Card Table */
+.cards-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    width: 75%;
+    margin-bottom: 1rem;
+}
+
+.cards-table table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.cards-table th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+.cards-table tr:nth-child(even){background-color: #f2f2f2}
+
+.cards-table th {
+    background-color: #009879;
+    color: white;
+}
+
+.cards-table th:nth-child(2), th:nth-child(3), th:nth-child(4) {
+    cursor: pointer;
+}
+
+.cards-table th[data-sort]::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    float: right;
+    margin-right: 1rem;
+}
+
+.cards-table th[data-sort="asc"]:after {
+    content: "\25B2";
+}
+.cards-table th[data-sort="desc"]:after {
+    content: "\25BC";
+}
+
+.cards-table tr:hover {background-color: #ddd;}
+
+.cards-table img {
+    width: auto;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.view-button {
+    background-color: #009879;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.15s ease all;
+    text-decoration: none;
+}
+
+.view-button:hover {
+    background-color: #007a5f;
+}
+
+/* Options / Controls Section */
+.controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+select {
+    border: 1px solid #009879;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 1rem;
 }
