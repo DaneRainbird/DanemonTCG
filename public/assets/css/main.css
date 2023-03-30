@@ -204,6 +204,12 @@ body {
     margin: 1rem;
     padding: 1rem;
     max-width: 30rem;
+    transition: 0.15s ease all;
+}
+
+.card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    scale: 1.05;
 }
 
 .cards {
