@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Libraries\PokemonTCGService;
-use PHPUnit\Util\Type;
 
 class Cards extends BaseController {
 
