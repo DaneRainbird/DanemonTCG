@@ -13,7 +13,8 @@
             'types',
             'nationalPokedexNumbers',
             'hp',
-            'rarity'
+            'rarity',
+            'set.id'
         ];
 
         /**

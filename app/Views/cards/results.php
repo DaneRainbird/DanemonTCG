@@ -13,7 +13,7 @@
 <div class="cards container">
     <?php 
         foreach ($cards as $card) : ?>
-        <a href="details/<?= $card['id']; ?>" target="_blank">
+        <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
             <div class="card">
                 <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
                 <div class="card-info">
@@ -46,29 +46,31 @@
                     <td><?= $card['name'] ?></td>
                     <td><?= $card['set']['name'] ?></td>
                     <td><?= $card['number'] . '/' . $card['set']['total'] ?></td>
-                    <td><a class="view-button" href="details/<?= $card['id']; ?>" target="_blank">View Card</a></td>
+                    <td><a class="view-button" href="/cards/details/<?= $card['id']; ?>" target="_blank">View Card</a></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
 
-<div class="pagination container">
-    <?php 
-        if (count($cards) !== 0) {
-            $totalPages = $pagination->getTotalPages();
-            $currentPage = $pagination->getPage();
+<?php if (isset($pagination)) : ?>
+    <div class="pagination container">
+        <?php 
+            if (count($cards) !== 0) {
+                $totalPages = $pagination->getTotalPages();
+                $currentPage = $pagination->getPage();
 
-            foreach (range(1, $totalPages) as $page) {
-                if ($page == $currentPage) {
-                    echo '<a class="page-button active" href="search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
-                } else {
-                    echo '<a class="page-button" href="search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                foreach (range(1, $totalPages) as $page) {
+                    if ($page == $currentPage) {
+                        echo '<a class="page-button active" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                    } else {
+                        echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                    }
                 }
             }
-        }
-    ?>
-</div>
+        ?>
+    </div>
+<?php endif; ?>
 
 <script>
     // Get the display selector

@@ -41,4 +41,28 @@ class Sets extends BaseController {
         ]);
         return view('fragments/footer');
     }
+
+    /**
+     * Display the cards of a set.
+     * 
+     * @param string $setCode The set code
+     */
+    public function details(string $setCode) : string {
+        // Get the set
+        $results = $this->pokemonTCGService->search('set.id:' . $setCode);
+
+        echo view('fragments/html_head', [
+            'title' => 'Set Details',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('cards/results', [
+            'searchQuery' => 'set.id:' . $setCode,
+            'cards' => $results['cards'],
+            'pagination' => $results['pagination'],
+        ]);
+        return view('fragments/footer');
+    }
 }
