@@ -35,7 +35,6 @@ $routes->get('/cards/search', 'Cards::search');
 $routes->get('/cards/details/(:any)', 'Cards::details/$1');
 
 $routes->get('/sets', 'Sets::index');
-$routes->get('/sets/details/(:any)', 'Sets::details/$1');
 
 /*
  * --------------------------------------------------------------------
