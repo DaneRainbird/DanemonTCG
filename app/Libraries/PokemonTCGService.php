@@ -105,5 +105,18 @@
             // Return the card
             return $card->toArray();
         }
+
+        /**
+         * Get all the sets.
+         * 
+         * @return array The sets
+         */
+        public function getSets() : array {
+            // Get the sets
+            $sets = Pokemon::Set()->all();
+
+            // Return the sets
+            return $sets;
+        }
     }
 ?>
