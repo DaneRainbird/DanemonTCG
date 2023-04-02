@@ -24,12 +24,14 @@
                 <tbody>
                     <td><?= $card['rarity']; ?></td>
                     <td>
-                        <?php foreach ($card['types'] as $type) : ?>
-                            <?php $typeString = $typeString . $type . ' / '; ?>
-                        <?php endforeach;
-                        echo trim($typeString, ' / '); ?>
+                        <?php if (isset($card['types'])) : ?>
+                            <?php foreach ($card['types'] as $type) : ?>
+                                <?php $typeString = $typeString . $type . ' / '; ?>
+                            <?php endforeach;
+                            echo trim($typeString, ' / '); ?>
+                        <?php else: echo "N/A"; endif; ?>
                     </td>
-                    <td><?= $card['set']['name']; ?></td>
+                    <td><a href="/cards/search?value=set.id:<?= $card['set']['id']; ?>" target="_blank"><?= $card['set']['name']; ?></a></td>
                     <td><?= $card['artist']; ?></td>
                 </tbody>
             </table>
