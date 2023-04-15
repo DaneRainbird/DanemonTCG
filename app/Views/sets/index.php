@@ -27,14 +27,18 @@
             <h2 id="<?= $set['id']; ?>"><?= $series; ?></h2>
             <div class="series-sets">
                 <?php foreach ($sets as $set) : ?>
-                    <a href="cards/search?value=set.id:<?= $set['id']; ?>" target="_blank">
-                        <div class="set">
-                            <img class="set-image" src="<?= $set['images']['logo'] ?>" alt="<?= $set['name'] ?>">
-                            <div class="set-info">
-                                <p><?= "<strong>" . $set['name'] . '</strong><br/><em>' . $set['releaseDate'] . '</em>'; ?></p>
+                    <div class="set-container">
+                        <a href="cards/search?value=set.id:<?= $set['id']; ?>" target="_blank">
+                            <div class="set">
+                                <div class="set-image">
+                                    <img src="<?= $set['images']['logo'] ?>" alt="<?= $set['name'] ?>">
+                                </div>
+                                <div class="set-info">
+                                    <p><?= "<strong>" . $set['name'] . '</strong><br/><em>' . $set['releaseDate'] . '</em>'; ?></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>
