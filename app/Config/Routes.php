@@ -30,11 +30,17 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+
+// Cards-relatedd routes 
 $routes->get('/cards', 'Cards::index');
 $routes->get('/cards/search', 'Cards::search');
 $routes->get('/cards/details/(:any)', 'Cards::details/$1');
 
+// Sets-related routes
 $routes->get('/sets', 'Sets::index');
+
+// Other / assorted routes
+$routes->get('/about', 'Home::about');
 
 /*
  * --------------------------------------------------------------------

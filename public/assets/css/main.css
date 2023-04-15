@@ -24,6 +24,11 @@ body {
     display: none !important;
 }
 
+h2 {
+    width: 100%;
+    border-bottom: 1px solid #009879;
+}
+
 /* Navbar */
 .navbar {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -123,13 +128,13 @@ body {
     flex-direction: column;
 }
 
-.footer a {
+.footer a, .fancy-link {
     color: grey;
     text-decoration: underline;
     transition: 0.15s ease all;
 }
 
-.footer a:hover {
+.footer a:hover, .fancy-link:hover {
     background-color: dimgray;
     color: white;
     padding: 2px;
@@ -421,11 +426,6 @@ select {
     justify-content: space-between;
     width: 80vw;
     margin: 1rem;
-}
-
-.series h2 {
-    width: 100%;
-    border-bottom: 1px solid #009879;
 }
 
 .series-sets {
