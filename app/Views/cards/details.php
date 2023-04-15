@@ -60,7 +60,7 @@
            
             <div class="ebay-data">
                 <h2 class="card-subheading">eBay Listings</h2>
-                <div class="">
+                <div class="ebay-links">
                     <p><?= anchor("https://www.ebay.com.au/sch/i.html?_nkw=" . $card['name'] . "+" . $card['number'] . "%2F" . $card['set']['printedTotal'], img(base_url('assets/img/ebay.ico'), false) . "eBay Sales (only Open)", ['target' => '_blank']) ?><?= anchor("https://www.ebay.com.au/sch/i.html?_nkw=" . $card['name'] . "+" . $card['number'] . "%2F" . $card['set']['printedTotal'] . "&_in_kw=1&_ex_kw=&_sacat=0&LH_Sold=1&Complete=1&_fosrp=1", img(base_url('assets/img/ebay.ico'), false) . "eBay Sales (including Sold)", ['target' => '_blank']) ?></p>
                 </div>
             </div>
