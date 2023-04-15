@@ -21,11 +21,23 @@ class Home extends BaseController
         echo view('fragments/html_head', [
             'title' => 'About',
             'styles' => [
-                'assets/css/main.css'
+                '/assets/css/main.css'
             ]
         ]);
         echo view('fragments/header');
         echo view('about');
+        return view('fragments/footer');
+    }
+
+    public function queries() {
+        echo view('fragments/html_head', [
+            'title' => 'About',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('queries');
         return view('fragments/footer');
     }
 }

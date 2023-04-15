@@ -41,6 +41,7 @@ $routes->get('/sets', 'Sets::index');
 
 // Other / assorted routes
 $routes->get('/about', 'Home::about');
+$routes->get('/about/queries', 'Home::queries');
 
 /*
  * --------------------------------------------------------------------
