@@ -5,16 +5,25 @@
 
     class PokemonTCGService {
 
-        // List of known query keywords
+        // List of known query keywords, pulled from https://docs.pokemontcg.io/api-reference/cards/get-card
         private $knownQueryKeywords = [
             'name',
             'subtypes',
             'supertype',
             'types',
+            'rules',
+            'attacks.name',
+            'weaknesses.type',
+            'retreatCost',
             'nationalPokedexNumbers',
             'hp',
             'rarity',
-            'set.id'
+            'set.id',
+            'set.name',
+            'set.series',
+            'set.ptcgoCode',
+            'number',
+            'artist'
         ];
 
         /**
@@ -25,32 +34,33 @@
         }
 
         /**
-         * Parse a query.
+         * Parses a query string into an array of key-value pairs.
          * 
          * @param string $query The query to parse
          * @return array The parsed query
          */
         private function parseQuery(string $query) : array {
-            $queryParts = explode(':', $query);
-            if (count($queryParts) == 2) {
-                // Get the keyword and the value
-                $keyword = $queryParts[0];
-                $value = $queryParts[1];
-
-                // Check if the keyword is known
-                if (in_array($keyword, $this->knownQueryKeywords)) {
-                    // Return the parsed query
-                    return [
-                        $keyword => $value
-                    ];
-
+            $queryParts = explode(' ', $query);
+            $parsedQuery = [];
+        
+            foreach ($queryParts as $part) {
+                $pos = strpos($part, ':');
+                if ($pos !== false) {
+                    $keyword = substr($part, 0, $pos);
+                    $value = substr($part, $pos + 1);
+        
+                    if (in_array($keyword, $this->knownQueryKeywords)) {
+                        $parsedQuery[$keyword] = $value;
+                    }
                 }
-            } else {
-                // Return a default query (i.e. search for the name of the card)
-                return [
-                    'name' => $query
-                ];
             }
+        
+            if (empty($parsedQuery)) {
+                // Default query if no valid query parts were found
+                $parsedQuery['name'] = $query;
+            }
+        
+            return $parsedQuery;
         }
 
         /**
