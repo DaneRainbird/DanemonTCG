@@ -17,7 +17,12 @@
                     <li><a class="navbar-item" href="/about">About</a></li>
                     <li><a class="navbar-item" href="/cards">Cards</a></li>
                     <li><a class="navbar-item" href="/sets">Sets</a></li>
-                    <li><a class="navbar-item" href="/login">Login</a></li>
+                    <?php if (session()->get('username')): ?>
+                        <li><a class="navbar-item" href="/users/profile">Profile</a></li>
+                        <li><a class="navbar-item" href="/users/logout">Logout</a></li>
+                    <?php else: ?>
+                        <li><a class="navbar-item" href="/login">Login</a></li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

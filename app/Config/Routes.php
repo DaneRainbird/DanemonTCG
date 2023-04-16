@@ -39,6 +39,13 @@ $routes->get('/cards/details/(:any)', 'Cards::details/$1');
 // Sets-related routes
 $routes->get('/sets', 'Sets::index');
 
+// User-related routes
+$routes->get('/login', 'Users::login'); // Shorthand-route for /users/login
+$routes->get('/logout', 'Users::logout'); // Shorthand-route for /users/logout
+$routes->get('/users/login', 'Users::login');
+$routes->get('/users/logout', 'Users::logout');
+$routes->get('/users/callback', 'Users::callback');
+
 // Other / assorted routes
 $routes->get('/about', 'Home::about');
 $routes->get('/about/queries', 'Home::queries');
