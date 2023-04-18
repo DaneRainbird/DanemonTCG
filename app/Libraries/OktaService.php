@@ -73,7 +73,7 @@
          * Authorize the user with Okta and obtain a list of "claims"
          * 
          * @param string $state - the state returned from Okta
-         * @return object containing result of the authorization
+         * @return array containing result of the authorization
          */
         public function authorizeUser($state) {
 
