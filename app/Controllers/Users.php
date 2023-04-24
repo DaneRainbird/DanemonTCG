@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Libraries\OktaService;
+use Exception;
 
 class Users extends BaseController {
     // Okta service
@@ -77,7 +78,22 @@ class Users extends BaseController {
 
         // If successful login then set session values
         session()->set('username', $result['username']);
+        session()->set('uid', $result['sub']);
         session()->setFlashdata('success', 'You have successfully logged in!');
+
+        // Create user in database if they don't already exist
+        if (!$this->db->doesUserExist($result['sub'])) {
+            try {
+                $this->db->createUser($result['sub'], $result['username']);
+            } catch (Exception $e) {
+                // If the user creation fails, then log the error and redirect to an error page
+                return view('errors/auth', [
+                    'state' => urldecode($this->request->getUri()->getQuery(['only' => ['state']])),
+                    'error' => 'User creation failed',
+                    'error_description' => 'The user could not be created in the database. Please try again later.'
+                ]);
+            }
+        }
 
         // Redirect to return URL (if provided) or home page
         if (session()->get('returnUrl')) {

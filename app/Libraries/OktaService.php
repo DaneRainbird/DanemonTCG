@@ -119,6 +119,7 @@
             
             // Update results object with user's claims and a success value
             $result['username'] = $claims->email;
+            $result['sub'] = $claims->sub;
             $result['success'] = true;
             return $result;
         }
