@@ -29,6 +29,12 @@
     </div>
 </nav>
 
+<?php if (session()->get('success')): ?>
+    <div class="notification is-success" id="notification-box">
+        <?= session()->get('success') ?> <span class="notification-close" id="notification-close">X</span>
+    </div>
+<?php endif; ?>
+
 <script>
     const navbarBurger = document.querySelector('.navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
@@ -36,5 +42,16 @@
     navbarBurger.addEventListener('click', function() {
         navbarBurger.classList.toggle('is-active');
         navbarMenu.classList.toggle('is-active');
+    });
+
+    const notificationBox = document.querySelector('#notification-box');
+    const notificationClose = document.querySelector('#notification-close');
+
+    notificationClose.addEventListener('click', function() {
+        notificationBox.style.transition = 'opacity 0.5s ease-in-out';
+        notificationBox.style.opacity = '0';
+        setTimeout(function() {
+            notificationBox.parentNode.removeChild(notificationBox);
+        }, 500);
     });
 </script>
