@@ -54,7 +54,7 @@
 </div>
 
 <?php if (isset($pagination)) : ?>
-    <div class="pagination container">
+    <div class="pagination">
         <?php 
             if (count($cards) !== 0) {
                 $totalPages = $pagination->getTotalPages();
