@@ -67,8 +67,9 @@
 
             <?php if (session()->get('username')): ?>
                 <div class="collection-buttons">
+                    <h2 class="card-subheading">Collections</h2>
                     <div class="dropdown">
-                        <label for="collection">Add to Collection</label>
+                        <label for="collection">Collection:</label>
                         <select name="collection" id="collection">
                             <?php foreach ($collections as $collection) : ?>
                                 <option value="<?= $collection->id ?>"><?= $collection->name ?></option>
@@ -76,7 +77,7 @@
                             <option value="__new__">Create new collection!</option>
                         </select>
                         <input type="hidden" id="card_id" value="<?= $card['id'] ?>">
-                        <button class="btn btn-primary" id="add-to-collection" type="button" onclick="addToCollection()">Add</button>
+                        <button class="view-button" id="add-to-collection" type="button" onclick="addToCollection()">Add</button>
                     </div>
                 </div>
             <?php endif; ?>
@@ -134,32 +135,30 @@ function addToCollection() {
 
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                var navbar = document.getElementById("navbar");
-                var notificationBox = document.createElement("div");
-                notificationBox.classList.add("notification", "is-success");
-                notificationBox.setAttribute("id", "notification-box");
-                notificationBox.innerHTML = `
-                    Card successfully added to the collection!
-                    <span class="notification-close" id="notification-close">X</span>
-                `;
-
-                navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
-
+                createNotification("Card successfully added to the collection!", "is-success");
             } else if (this.readyState == 4 && this.status == 400) {
-                var navbar = document.getElementById("navbar");
-                var notificationBox = document.createElement("div");
-                notificationBox.classList.add("notification", "is-danger");
-                notificationBox.setAttribute("id", "notification-box");
-                notificationBox.innerHTML = `
-                    Card could not be added to the collection: ${JSON.parse(this.responseText).message}
-                    <span class="notification-close" id="notification-close">X</span>
-                `;
-
-                navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
-            }
-            
+                createNotification("Card could not be added to the collection: " + JSON.parse(this.responseText).message, "is-danger");
+            }  
         }
     }
+}
+
+/**
+ * Creates a notification box and inserts it below the navbar
+ * @param {string} message The message to display in the notification box
+ * @param {string} type The type of notification box to create (is-success, is-danger, etc.)
+ */
+function createNotification(message, type) {
+    var navbar = document.getElementById("navbar");
+    var notificationBox = document.createElement("div");
+    notificationBox.classList.add("notification", type);
+    notificationBox.setAttribute("id", "notification-box");
+    notificationBox.innerHTML = `
+        ${message}
+        <span class="notification-close" id="notification-close">X</span>
+    `;
+
+    navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
 }
 
 </script>
