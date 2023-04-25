@@ -8,7 +8,6 @@
 <script>
 // Event listener for clicks on the DOM 
 document.addEventListener('click', function(event) {
-
     // Check to see if the user clicked on the notification close button, and if so, close the notification
     const notificationClose = event.target.closest('.notification-close');
     if (notificationClose) {
@@ -20,4 +19,23 @@ document.addEventListener('click', function(event) {
         }, 500);
     }
 });
+
+
+/**
+ * Creates a notification box and inserts it below the navbar
+ * @param {string} message The message to display in the notification box
+ * @param {string} type The type of notification box to create (is-success, is-danger, etc.)
+ */
+function createNotification(message, type) {
+    var navbar = document.getElementById("navbar");
+    var notificationBox = document.createElement("div");
+    notificationBox.classList.add("notification", type);
+    notificationBox.setAttribute("id", "notification-box");
+    notificationBox.innerHTML = `
+        ${message}
+        <span class="notification-close" id="notification-close">X</span>
+    `;
+
+    navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
+}
 </script>

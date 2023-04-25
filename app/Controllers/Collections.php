@@ -22,6 +22,74 @@ class Collections extends BaseController {
     }
 
     /**
+     * View a collection.
+     * 
+     * @param int $collectionId The ID of the collection to view.
+     */
+    public function view($collectionId) {
+        // Ensure that the user is signed in, and that they own this collection
+        if (!$this->session->get('uid') || !$this->db->userOwnsCollection($this->session->get('uid'), $collectionId)) {
+            session()->setFlashdata('error', 'You do not have permission to view this collection!');
+            return redirect()->to('/');
+        }
+
+        // Get the cards in the collection
+        $results = $this->db->getCardsInCollection($collectionId);
+
+        // Loop through each card and get it's details
+        $cards = [];
+        foreach ($results as $result) {
+            array_push($cards, $this->pokemonTCGService->getCard($result->card_id));
+        }
+
+        // Render the card search results view
+        echo view('fragments/html_head', [
+            'title' => 'Search',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('collections/results', [
+            'cards' => $cards,
+            'collectionId' => $collectionId,
+            'collectionName' => $this->db->getCollectionName($collectionId)
+        ]);
+        return view('fragments/footer');
+    }
+
+    public function viewAll() {
+        // Ensure that the user is signed in, and that they own this collection
+        if (!$this->session->get('uid')) {
+            session()->setFlashdata('error', 'You must be signed in to view this page!');
+            return redirect()->to('/');
+        }
+
+        // Get all of the cards in all of the user's collections
+        $results = $this->db->getAllCardsInCollections($this->session->get('uid'));
+
+        // Loop through each card and get it's details
+        $cards = [];
+        foreach ($results as $result) {
+            array_push($cards, $this->pokemonTCGService->getCard($result->card_id));
+        }
+
+        // Render the card search results view
+        echo view('fragments/html_head', [
+            'title' => 'Search',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('collections/results', [
+            'cards' => $cards,
+            'collectionId' => 'user-all',
+        ]);
+        return view('fragments/footer');
+    }
+
+    /**
      * Creates a new collection.
      */
     public function createCollection() {
@@ -89,4 +157,72 @@ class Collections extends BaseController {
         return json_encode($response);
 
     }
+
+    /**
+     * Remove a card from a collection.
+     */
+    public function removeFromCollection() {
+        // Get form data
+        $cardId = $this->request->getPost('card_id');
+        $collectionId = $this->request->getPost('collection_id');
+        $userId = $this->request->getPost('user_id');
+
+        // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
+        if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
+            $response = array("status" => "error", "message" => "User not authenticated");
+            $this->response->setStatusCode(401);
+            return json_encode($response);
+        }
+
+        // If the collection-id is 'user-all', then the user is trying to remove a card from all of their collections
+        if ($collectionId == 'user-all') {
+            // Get all of the user's collections
+            $collections = $this->db->getUserCollections($userId);
+
+            // Loop through each collection and remove the card from it
+            foreach ($collections as $collection) {
+                // Ensure that the card is in the collection
+                if ($this->db->cardInCollection($cardId, $collection->id)) {
+                    // If it is, remove it
+                    if (!$this->db->removeCardFromCollection($cardId, $collection->id)) {
+                        $response = array("status" => "error", "message" => "Failed to remove card from collection. Try again later!");
+                        $this->response->setStatusCode(500);
+                        return json_encode($response);
+                    }
+                }
+            }
+
+            // Return a success message
+            $response = array("status" => "success", "message" => "Card removed from all collections!");
+            return json_encode($response);
+
+        } else {
+            // Ensure that the user owns the collection
+            if (!$this->db->userOwnsCollection($userId, $collectionId)) {
+                $response = array("status" => "error", "message" => "User does not own the requested collection!");
+                $this->response->setStatusCode(401);
+                return json_encode($response);
+            }
+
+            // Ensure that the card is in the collection
+            if (!$this->db->cardInCollection($cardId, $collectionId)) {
+                $response = array("status" => "error", "message" => "Card not in collection!");
+                $this->response->setStatusCode(400);
+                return json_encode($response);
+            }
+
+            // Remove the card from the collection
+            if (!$this->db->removeCardFromCollection($cardId, $collectionId)) {
+                $response = array("status" => "error", "message" => "Failed to remove card from collection. Try again later!");
+                $this->response->setStatusCode(500);
+                return json_encode($response);
+            }
+        }
+
+        // Return a success message
+        $response = array("status" => "success", "message" => "Card removed from collection!");
+        return json_encode($response);
+    }
+
+
 }

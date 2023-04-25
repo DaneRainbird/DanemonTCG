@@ -142,23 +142,4 @@ function addToCollection() {
         }
     }
 }
-
-/**
- * Creates a notification box and inserts it below the navbar
- * @param {string} message The message to display in the notification box
- * @param {string} type The type of notification box to create (is-success, is-danger, etc.)
- */
-function createNotification(message, type) {
-    var navbar = document.getElementById("navbar");
-    var notificationBox = document.createElement("div");
-    notificationBox.classList.add("notification", type);
-    notificationBox.setAttribute("id", "notification-box");
-    notificationBox.innerHTML = `
-        ${message}
-        <span class="notification-close" id="notification-close">X</span>
-    `;
-
-    navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
-}
-
 </script>

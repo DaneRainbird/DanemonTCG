@@ -33,6 +33,10 @@
     <div class="notification is-success" id="notification-box">
         <?= session()->get('success') ?> <span class="notification-close" id="notification-close">X</span>
     </div>
+<?php elseif (session()->get('error')): ?>
+    <div class="notification is-danger" id="notification-box">
+        <?= session()->get('error') ?> <span class="notification-close" id="notification-close">X</span>
+    </div>
 <?php endif; ?>
 
 <script>

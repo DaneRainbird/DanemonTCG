@@ -68,6 +68,58 @@ class DatenmonDatabaseService {
                 return true;
             }
 
+            /** 
+             * Gets a collection's name by its ID
+             * 
+             * @param int $collectionId The ID of the collection to get the name of
+             * 
+             * @return string Returns the name of the collection
+             */
+            public function getCollectionName($collectionId) {
+                // Get the collection name
+                $query = $this->db->table('collections')->getWhere(['id' => $collectionId]);
+                $result = $query->getResult();
+
+                if ($result) {
+                    return $result[0]->name;
+                }
+
+                return false;
+            }
+
+            /**
+             * Gets all of the cards in a collection 
+             * 
+             * @param int $collectionId The ID of the collection to get cards for
+             * 
+             * @return array Returns an array of card objects
+             */
+            public function getCardsInCollection($collectionId) {
+                // Get the cards in the collection
+                $query = $this->db->table('collection_cards')->getWhere(['collection_id' => $collectionId]);
+                return $query->getResult();
+            }
+
+            /**
+             * Gets every card in every collection owned by the user with the specified Okta user ID.
+             * 
+             * @param string $uid The Okta user ID of the user to get cards for.
+             * 
+             * @return array Returns an array of card objects.
+             */
+            public function getAllCardsInCollections($uid) {
+                // Get the user's collections
+                $collections = $this->getUserCollections($uid);
+
+                // Get the cards in each collection
+                $cards = [];
+                foreach ($collections as $collection) {
+                    $cards = array_merge($cards, $this->getCardsInCollection($collection->id));
+                }
+
+                return $cards;
+            }
+
             /**
              * Checks if the user owns a collection with the specified ID.
              *
@@ -133,6 +185,29 @@ class DatenmonDatabaseService {
 
                 // Try to insert the card, return error if it fails 
                 if (!$this->db->table('collection_cards')->insert($data)) {
+                    throw new Exception($this->db->error()['message']);
+                } 
+
+                return true;
+            }
+
+            /**
+             * Removes a card from the collection with the specified ID.
+             *
+             * @param int $card The ID of the card to remove.
+             * @param int $collectionId The ID of the collection to remove the card from.
+             * @return bool Returns true if the card was successfully removed from the collection, or throws an exception if an error occurred.
+             * @throws Exception Throws an exception if an error occurred while trying to delete the card.
+             */
+            public function removeCardFromCollection($card, $collectionId) {
+                // Remove the card from the collection
+                $data = [
+                    'collection_id' => $collectionId,
+                    'card_id' => $card
+                ];
+
+                // Try to delete the card, return error if it fails 
+                if (!$this->db->table('collection_cards')->delete($data)) {
                     throw new Exception($this->db->error()['message']);
                 } 
 
