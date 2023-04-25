@@ -20,6 +20,6 @@
             <?php endforeach; ?>
         </div>
     <?php else : ?>
-        <p>You don't have any collections yet! Why not check out <a href="/cards">some cards</a> and make some?</p>
+        <p>You don't have any collections yet! Why not check out <a class="fancy-link" href="/cards">some cards</a> and make some?</p>
     <?php endif; ?>
 </div>
