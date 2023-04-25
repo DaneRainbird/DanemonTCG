@@ -36,13 +36,24 @@ class Users extends BaseController {
         }
 
         // If user is already logged in, redirect to return URL or home page
-        if (session()->get('returnUrl')) {
-            $returnUrl = session()->get('returnUrl');
-            session()->remove('returnUrl');
-            return redirect()->to($returnUrl);
+        $returnUrl = session()->get('returnUrl') ?? session()->get('_ci_previous_url');
+
+        // Remove the session data
+        session()->remove('returnUrl');
+        session()->remove('_ci_previous_url');
+
+        // If the return URL is not set, redirect to the home page
+        if (!$returnUrl) {
+            return redirect()->to('/');
         }
 
-        return redirect()->to('/');
+        // If the return URL is the login page, redirect to the home page
+        if ($returnUrl == '/login') {
+            return redirect()->to('/');
+        }
+
+        // Redirect to the return URL
+        return redirect()->to($returnUrl);
     }
 
     /**
@@ -95,14 +106,25 @@ class Users extends BaseController {
             }
         }
 
-        // Redirect to return URL (if provided) or home page
-        if (session()->get('returnUrl')) {
-            $returnUrl = session()->get('returnUrl');
-            session()->remove('returnUrl');
-            return redirect()->to($returnUrl);
+        // Retrieve the return URL from the session data
+        $returnUrl = session()->get('returnUrl') ?? session()->get('_ci_previous_url');
+
+        // Remove the session data
+        session()->remove('returnUrl');
+        session()->remove('_ci_previous_url');
+
+        // If the return URL is not set, redirect to the home page
+        if (!$returnUrl) {
+            return redirect()->to('/');
         }
 
-        return redirect()->to('/');
+        // If the return URL is the login page, redirect to the home page
+        if ($returnUrl == '/login') {
+            return redirect()->to('/');
+        }
+
+        // Redirect to the return URL
+        return redirect()->to($returnUrl);
     }
 
     /**
@@ -113,12 +135,30 @@ class Users extends BaseController {
      * @return CodeIgniter\HTTP\RedirectResponse::to redirect to homepage
      */
     public function logout() {
+        // If set, get the _ci_previous_url session value
+        if (session()->get('_ci_previous_url')) {
+            $returnUrl = session()->get('_ci_previous_url');
+            session()->remove('_ci_previous_url');
+        }
+
         // Destroy the session on logout
         session()->destroy();
+
+        // If the _ci_previous_url session value is set, then redirect to that URL
+        if (isset($returnUrl)) {
+            return redirect()->to($returnUrl);
+        }
 
         return redirect()->to('/');
     }
 
+    /**
+     * Profile function
+     * 
+     * Displays the user's profile page
+     * 
+     * @return mixed CodeIgniter\HTTP\RedirectResponse::to redirect to login page or view::load profile page 
+     */
     public function profile() {
         // If the user is logged in, then display the profile page
         if (session()->get('username')) {
@@ -132,7 +172,7 @@ class Users extends BaseController {
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),
-                'collections' => $this->db->getCollections(session()->get('uid'))
+                'collections' => $this->db->getUserCollectionsWithCards(session()->get('uid'))
             ]);
             return view('fragments/footer');
         }
