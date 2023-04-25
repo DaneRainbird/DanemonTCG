@@ -5,15 +5,14 @@
 
     <h2>My Collections</h2>
     <?php if (!empty($collections)) : ?>
-        <p>Click on any of your collections to see their cards:</p>
-        <div class="series-sets">
+        <p>Click on any of your collections to see their cards, or you can see <a class="fancy-link" href="/collections/view/all/" target="_blank">all of the cards you have added to a collection</a>.</p>
+        <div class="series-sets collections">
             <?php foreach ($collections as $collection) : ?>
                 <div class="set-container">
                     <a href="/collections/view/<?= $collection->id ?>">
                         <div class="set">
                             <div class="set-info">
-                                <p><?= $collection->name ?></p>
-                                <p><?= count($collection->cards) ?> cards</p>
+                                <p><strong><?= $collection->name ?></strong></p>
                             </div>
                         </div>
                     </a>

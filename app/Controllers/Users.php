@@ -172,7 +172,7 @@ class Users extends BaseController {
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),
-                'collections' => $this->db->getUserCollectionsWithCards(session()->get('uid'))
+                'collections' => $this->db->getUserCollections(session()->get('uid'))
             ]);
             return view('fragments/footer');
         }
