@@ -20,6 +20,15 @@ class DatenmonDatabaseService {
             }
 
             /**
+             * Gets the last inserted ID from the database
+             * 
+             * @return int The last inserted ID
+             */
+            public function getInsertID() {
+                return $this->db->insertID();
+            }
+
+            /**
              * Gets a user from the database by their Okta UID ("sub")
              * 
              * @param string $uid Okta UID
@@ -128,5 +137,45 @@ class DatenmonDatabaseService {
                 } 
 
                 return true;
+            }
+
+            /**
+             * Creates a collection with the specified name, owned by the user with the specified Okta user ID.
+             * 
+             * @param string $collectionName The name of the collection to create.
+             * @param string $userId The Okta user ID of the user to create the collection for.
+             * @return bool Returns true if the collection was successfully created, or throws an exception if an error occurred.
+             * @throws Exception Throws an exception if an error occurred while trying to insert the collection.
+             */
+            public function createCollection($collectionName, $userId) {
+                // Create the collection
+                $data = [
+                    'name' => $collectionName,
+                    'okta_id' => $userId
+                ];
+
+                // Try to insert the collection, return error if it fails 
+                if (!$this->db->table('collections')->insert($data)) {
+                    throw new Exception($this->db->error()['message']);
+                } 
+
+                return true;
+            }
+
+            /**
+             * Checks if the card with the specified ID is in the collection with the specified ID.
+             * 
+             * @param int $cardId The ID of the card to check.
+             * @param int $collectionId The ID of the collection to check.
+             * @return bool Returns true if the card is in the collection, false otherwise.
+             */
+            public function cardInCollection($cardId, $collectionId) {
+                // Check if the card is in the collection
+                $query = $this->db->table('collection_cards')->getWhere(['card_id' => $cardId, 'collection_id' => $collectionId]);
+                if ($query->getResult()) {
+                    return true;
+                }
+
+                return false;
             }
 }

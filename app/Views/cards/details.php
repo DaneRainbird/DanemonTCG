@@ -73,6 +73,7 @@
                             <?php foreach ($collections as $collection) : ?>
                                 <option value="<?= $collection->id ?>"><?= $collection->name ?></option>
                             <?php endforeach; ?>
+                            <option value="__new__">Create new collection!</option>
                         </select>
                         <input type="hidden" id="card_id" value="<?= $card['id'] ?>">
                         <button class="btn btn-primary" id="add-to-collection" type="button" onclick="addToCollection()">Add</button>
@@ -84,11 +85,48 @@
 </div>
 
 <script>
-    function addToCollection() {
+function addToCollection() {
+    var collectionSelect = document.getElementById("collection");
+    var collectionId = collectionSelect.value;
+
+    // If the user asked to create a new collection, then do that first
+    if (collectionId === "__new__") {
+        // Prompt the user to enter the name of the new collection
+        var newCollectionName = prompt("Enter the name of the new collection:");
+
+        // If the user entered a name, create the new collection and add it to the dropdown
+        if (newCollectionName) {
+            var xhr = new XMLHttpRequest();
+            var url = "/collections/createCollection";
+            var formData = new FormData();
+            formData.append("collection_name", newCollectionName);
+            formData.append("user_id", "<?= session()->get('uid') ?>");
+            xhr.open("POST", url);
+            xhr.send(formData);
+
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Add the new collection to the dropdown
+                    var newCollectionId = JSON.parse(this.responseText).id;
+                    var newOption = document.createElement("option");
+                    newOption.value = newCollectionId;
+                    newOption.textContent = newCollectionName;
+                    collectionSelect.insertBefore(newOption, collectionSelect.lastChild);
+                    
+                    // Select the new collection
+                    collectionSelect.value = newCollectionId;
+                }
+            }
+        } else {
+            // No name was entered, or the prompt was closed, so do nothing
+            return;
+        }
+    } else {
+        // The user selected an existing collection, so add the card to it
         var xhr = new XMLHttpRequest();
-        var url = "/cards/addToCollection"; 
+        var url = "/collections/addCardToCollection"; 
         var formData = new FormData();
-        formData.append("collection_id", document.getElementById("collection").value);
+        formData.append("collection_id", collectionId);
         formData.append("card_id", document.getElementById("card_id").value);
         formData.append("user_id", "<?= session()->get('uid') ?>");
         xhr.open("POST", url);
@@ -96,8 +134,32 @@
 
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                alert("Card added to collection!");
+                var navbar = document.getElementById("navbar");
+                var notificationBox = document.createElement("div");
+                notificationBox.classList.add("notification", "is-success");
+                notificationBox.setAttribute("id", "notification-box");
+                notificationBox.innerHTML = `
+                    Card successfully added to the collection!
+                    <span class="notification-close" id="notification-close">X</span>
+                `;
+
+                navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
+
+            } else if (this.readyState == 4 && this.status == 400) {
+                var navbar = document.getElementById("navbar");
+                var notificationBox = document.createElement("div");
+                notificationBox.classList.add("notification", "is-danger");
+                notificationBox.setAttribute("id", "notification-box");
+                notificationBox.innerHTML = `
+                    Card could not be added to the collection: ${JSON.parse(this.responseText).message}
+                    <span class="notification-close" id="notification-close">X</span>
+                `;
+
+                navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
             }
+            
         }
     }
+}
+
 </script>
