@@ -1,13 +1,26 @@
 <div class="container">
-    <?= session()->get('username') ?> is logged in!
+    <h2>Profile</h2>
+    <p>Welcome to your profile page, <?= session()->get('username') ?>!</p>
+    <p>Here you can view your collections, and maybe eventually do other things. It's a work in progress.</p>
 
-    <h3>collections?</h3>
-    <?php foreach ($collections as $collection) : ?>
-        <div class="collection">
-            <h4><?= $collection->name ?></h4>
-            <?php foreach ($collection->cards as $card) : ?>
-                <p><?= $card->card_id ?></p>
+    <h2>My Collections</h2>
+    <?php if (!empty($collections)) : ?>
+        <p>Click on any of your collections to see their cards:</p>
+        <div class="series-sets">
+            <?php foreach ($collections as $collection) : ?>
+                <div class="set-container">
+                    <a href="/collections/view/<?= $collection->id ?>">
+                        <div class="set">
+                            <div class="set-info">
+                                <p><?= $collection->name ?></p>
+                                <p><?= count($collection->cards) ?> cards</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
+    <?php else : ?>
+        <p>You don't have any collections yet! Why not check out <a href="/cards">some cards</a> and make some?</p>
+    <?php endif; ?>
 </div>
