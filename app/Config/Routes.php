@@ -42,6 +42,8 @@ $routes->get('/sets', 'Sets::index');
 // User-related routes
 $routes->get('/login', 'Users::login'); // Shorthand-route for /users/login
 $routes->get('/logout', 'Users::logout'); // Shorthand-route for /users/logout
+$routes->get('/profile' , 'Users::profile'); // Shorthand-route for /users/profile
+$routes->get('/users/profile', 'Users::profile');
 $routes->get('/users/login', 'Users::login');
 $routes->get('/users/logout', 'Users::logout');
 $routes->get('/users/callback', 'Users::callback');

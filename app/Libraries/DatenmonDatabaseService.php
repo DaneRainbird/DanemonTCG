@@ -58,4 +58,27 @@ class DatenmonDatabaseService {
 
                 return true;
             }
+
+            public function getCollections($uid) {
+                // $query = $this->db->table('collections')->getWhere(['okta_id' => $uid]);
+
+                // if ($query->getResult()) {
+                //     return $query->getResult();
+                // }
+
+                // return [];
+
+                // Get the user's collections based off their Okta UID, and then also get the contents of each collection from the collection_cards table via the collection id
+                $query = $this->db->table('collections')->getWhere(['okta_id' => $uid]);
+                $collections = $query->getResult();
+
+                foreach ($collections as $collection) {
+                    $query = $this->db->table('collection_cards')->getWhere(['collection_id' => $collection->id]);
+                    $collection->cards = $query->getResult();
+                }
+
+                return $collections;        
+            }
+
+
 }

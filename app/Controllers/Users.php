@@ -118,4 +118,29 @@ class Users extends BaseController {
 
         return redirect()->to('/');
     }
+
+    public function profile() {
+        // If the user is logged in, then display the profile page
+        if (session()->get('username')) {
+            echo view('fragments/html_head', [
+                'title' => 'Sets',
+                'styles' => [
+                    '/assets/css/main.css'
+                ]
+            ]);
+            echo view('fragments/header');
+            echo view('profile', [
+                'username' => session()->get('username'),
+                'uid' => session()->get('uid'),
+                'collections' => $this->db->getCollections(session()->get('uid'))
+            ]);
+            return view('fragments/footer');
+        }
+
+        // If the user is not logged in, then redirect to the login page
+        session()->set('returnUrl', '/profile');
+        session()->setFlashdata('error', 'You must be logged in to view your profile.');
+
+        return redirect()->to('/login');
+    }
 }
