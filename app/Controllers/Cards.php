@@ -99,6 +99,13 @@ class Cards extends BaseController {
         // Get the card
         $card = $this->pokemonTCGService->getCard($id);
 
+        // Get user collection data if the user is logged in
+        if ($this->session->get('uid')) {
+            $userCollections = $this->db->getUserCollections($this->session->get('uid'), $id);
+        } else {
+            $userCollections = [];
+        }
+
         // Ensure the card exists
         if (is_null($card)) {
             // Redirect to the home page
@@ -114,8 +121,43 @@ class Cards extends BaseController {
         ]);
         echo view('fragments/header');
         echo view('cards/details', [
-            'card' => $card
+            'card' => $card,
+            'collections' => $userCollections
         ]);
         return view('fragments/footer');
     }
+
+    /**
+     * Add a card to a collection.
+    */
+    public function addToCollection() {
+        // Get form data
+        $cardId = $this->request->getPost('card_id');
+        $collectionId = $this->request->getPost('collection_id');
+        $userId = $this->request->getPost('user_id');
+
+        // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
+        if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
+            $response = array("status" => "error", "message" => "User not authenticated");
+            return json_encode($response);
+        }
+
+        // Ensure that the user owns the collection
+        if (!$this->db->userOwnsCollection($userId, $collectionId)) {
+            $response = array("status" => "error", "message" => "User does not own the requested collection!");
+            return json_encode($response);
+        }
+
+        // Add the card to the collection
+        if (!$this->db->addCardToCollection($cardId, $collectionId)) {
+            $response = array("status" => "error", "message" => "Failed to add card to collection. Try again later!");
+            return json_encode($response);
+        }
+        
+        // Return a success message
+        $response = array("status" => "success", "message" => "Card added to collection!");
+        return json_encode($response);
+
+    }
+
 }

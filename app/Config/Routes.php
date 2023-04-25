@@ -31,7 +31,7 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
-// Cards-relatedd routes 
+// Cards-related routes 
 $routes->get('/cards', 'Cards::index');
 $routes->get('/cards/search', 'Cards::search');
 $routes->get('/cards/details/(:any)', 'Cards::details/$1');
@@ -47,6 +47,9 @@ $routes->get('/users/profile', 'Users::profile');
 $routes->get('/users/login', 'Users::login');
 $routes->get('/users/logout', 'Users::logout');
 $routes->get('/users/callback', 'Users::callback');
+
+// Card-management routes
+$routes->post('/cards/addToCollection', 'Cards::addToCollection');
 
 // Other / assorted routes
 $routes->get('/about', 'Home::about');

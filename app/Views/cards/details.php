@@ -64,6 +64,40 @@
                     <p><?= anchor("https://www.ebay.com.au/sch/i.html?_nkw=" . $card['name'] . "+" . $card['number'] . "%2F" . $card['set']['printedTotal'], img(base_url('assets/img/ebay.ico'), false) . "eBay Sales (only Open)", ['target' => '_blank']) ?><?= anchor("https://www.ebay.com.au/sch/i.html?_nkw=" . $card['name'] . "+" . $card['number'] . "%2F" . $card['set']['printedTotal'] . "&_in_kw=1&_ex_kw=&_sacat=0&LH_Sold=1&Complete=1&_fosrp=1", img(base_url('assets/img/ebay.ico'), false) . "eBay Sales (including Sold)", ['target' => '_blank']) ?></p>
                 </div>
             </div>
+
+            <?php if (session()->get('username')): ?>
+                <div class="collection-buttons">
+                    <div class="dropdown">
+                        <label for="collection">Add to Collection</label>
+                        <select name="collection" id="collection">
+                            <?php foreach ($collections as $collection) : ?>
+                                <option value="<?= $collection->id ?>"><?= $collection->name ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <input type="hidden" id="card_id" value="<?= $card['id'] ?>">
+                        <button class="btn btn-primary" id="add-to-collection" type="button" onclick="addToCollection()">Add</button>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
+
+<script>
+    function addToCollection() {
+        var xhr = new XMLHttpRequest();
+        var url = "/cards/addToCollection"; 
+        var formData = new FormData();
+        formData.append("collection_id", document.getElementById("collection").value);
+        formData.append("card_id", document.getElementById("card_id").value);
+        formData.append("user_id", "<?= session()->get('uid') ?>");
+        xhr.open("POST", url);
+        xhr.send(formData);
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                alert("Card added to collection!");
+            }
+        }
+    }
+</script>

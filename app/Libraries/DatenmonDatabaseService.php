@@ -59,15 +59,23 @@ class DatenmonDatabaseService {
                 return true;
             }
 
-            public function getCollections($uid) {
-                // $query = $this->db->table('collections')->getWhere(['okta_id' => $uid]);
+            public function userOwnsCollection($uid, $collectionId) {
+                // Check if the user owns the collection
+                $query = $this->db->table('collections')->getWhere(['okta_id' => $uid, 'id' => $collectionId]);
+                if ($query->getResult()) {
+                    return true;
+                }
 
-                // if ($query->getResult()) {
-                //     return $query->getResult();
-                // }
+                return false;
+            }
 
-                // return [];
+            public function getUserCollections($uid) {
+                // Get the user's collections based off their Okta UID
+                $query = $this->db->table('collections')->getWhere(['okta_id' => $uid]);
+                return $query->getResult();
+            }
 
+            public function getUserCollectionsWithCards($uid) {
                 // Get the user's collections based off their Okta UID, and then also get the contents of each collection from the collection_cards table via the collection id
                 $query = $this->db->table('collections')->getWhere(['okta_id' => $uid]);
                 $collections = $query->getResult();
@@ -80,5 +88,18 @@ class DatenmonDatabaseService {
                 return $collections;        
             }
 
+            public function addCardToCollection($card, $collectionId) {
+                // Add the card to the collection
+                $data = [
+                    'collection_id' => $collectionId,
+                    'card_id' => $card
+                ];
 
+                // Try to insert the card, return error if it fails 
+                if (!$this->db->table('collection_cards')->insert($data)) {
+                    throw new Exception($this->db->error()['message']);
+                } 
+
+                return true;
+            }
 }
