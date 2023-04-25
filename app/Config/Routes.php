@@ -49,8 +49,8 @@ $routes->get('/users/logout', 'Users::logout');
 $routes->get('/users/callback', 'Users::callback');
 
 // Card-management routes
-$routes->post('/collections/addCardToCollection', 'Cards::addToCollection');
-$routes->post('/collections/createCollection', 'Cards::createCollection');
+$routes->post('/collections/addCardToCollection', 'Collections::addToCollection');
+$routes->post('/collections/createCollection', 'Collections::createCollection');
 
 // Other / assorted routes
 $routes->get('/about', 'Home::about');
