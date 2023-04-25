@@ -85,6 +85,7 @@ class Collections extends BaseController {
         echo view('collections/results', [
             'cards' => $cards,
             'collectionId' => 'user-all',
+            'collectionName' => "All Collections"
         ]);
         return view('fragments/footer');
     }
