@@ -80,5 +80,13 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        // Hacky workaround to fix SSL config values not being interpreted correctly from the .env file\
+        // See https://github.com/codeigniter4/CodeIgniter4/issues/7453
+        $array = json_decode($this->default['encrypt'], true);
+
+        if (is_array($array)) {
+            $this->default['encrypt'] = $array;
+        }
     }
 }
