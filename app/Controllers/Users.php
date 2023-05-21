@@ -17,7 +17,7 @@ class Users extends BaseController {
         $this->okta = new OktaService();
     }
 
-        /**
+    /**
      * Login function
      * 
      * Begins the Okta login process
@@ -89,6 +89,7 @@ class Users extends BaseController {
 
         // If successful login then set session values
         session()->set('username', $result['username']);
+        session()->set('id_token', $result['id_token']);
         session()->set('uid', $result['sub']);
         session()->setFlashdata('success', 'You have successfully logged in!');
 
@@ -130,26 +131,17 @@ class Users extends BaseController {
     /**
      * Logout function
      * 
-     * Logs the user out of the application by removing stored session values
+     * Logs the user out of the application by removing stored session values and destroying the Okta login session
      * 
      * @return CodeIgniter\HTTP\RedirectResponse::to redirect to homepage
      */
     public function logout() {
-        // If set, get the _ci_previous_url session value
-        if (session()->get('_ci_previous_url')) {
-            $returnUrl = session()->get('_ci_previous_url');
-            session()->remove('_ci_previous_url');
-        }
-
         // Destroy the session on logout
         session()->destroy();
 
-        // If the _ci_previous_url session value is set, then redirect to that URL
-        if (isset($returnUrl)) {
-            return redirect()->to($returnUrl);
-        }
-
-        return redirect()->to('/');
+        // Destroy the Okta login session
+        $logoutUrl = $this->okta->buildLogoutUrl();
+        return redirect()->to($logoutUrl);
     }
 
     /**

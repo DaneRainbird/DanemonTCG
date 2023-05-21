@@ -120,7 +120,33 @@
             // Update results object with user's claims and a success value
             $result['username'] = $claims->email;
             $result['sub'] = $claims->sub;
+            $result['id_token'] = json_decode($response->getBody())->id_token;
             $result['success'] = true;
             return $result;
+        }
+
+        /**
+         * buildLogoutUrl
+         * 
+         * Builds the URL used to initiate the Okta logout process
+         * 
+         * @return string containing the logout url
+         */
+        public function buildLogoutUrl() {
+            // cURL request to get the logout url
+            $metadata = $this->curl->request('GET', $this->metadataUrl);
+
+            // If successful, get the logout url from the response
+            if ($metadata->getStatusCode() == 200) {
+                $metadata = json_decode($metadata->getBody());
+                $logoutUrl = $metadata->end_session_endpoint;
+            } else {
+                return 'Error: ' . $metadata->statusCode;
+            }
+
+            return $logoutUrl . '?' . http_build_query([
+                'id_token_hint' => $_SESSION['id_token'],
+                'post_logout_redirect_uri' => env('app.baseURL')
+            ]);
         }
     }
