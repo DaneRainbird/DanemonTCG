@@ -110,8 +110,17 @@
          * @return array The card
          */
         public function getCard(string $id) : array {
-            // Get the card
+            // Check if the card exists in cache first
+            $cachedCard = cache('card_' . $id);
+            if ($cachedCard) {
+                return $cachedCard;
+            }
+
+            // If not, get the card from the API
             $card = Pokemon::Card()->find($id);
+
+            // Cache the card
+            cache()->save('card_' . $id, $card->toArray(), 3600);
 
             // Return the card
             return $card->toArray();
