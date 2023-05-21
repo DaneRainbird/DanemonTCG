@@ -16,7 +16,7 @@ class DatenmonDatabaseService {
              */
             public function __construct() {
                 // Initialise database
-                $this->db = \Config\Database::connect();
+                $this->db = \Config\Database::connect(env('CI_ENVIRONMENT') === 'development' ? 'local' : 'default');
             }
 
             /**
