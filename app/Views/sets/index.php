@@ -17,8 +17,10 @@
         $setsBySeries[$series] = $sets;
     }
 
-    // Invert the array so that the most recent sets are at the top
-    $setsBySeries = array_reverse($setsBySeries);
+    // Sort the keys by the release date of the most recent set in each series
+    uasort($setsBySeries, function($a, $b) {
+        return strtotime($b[0]['releaseDate']) - strtotime($a[0]['releaseDate']);
+    });
 ?>
 
 <div class="cards container">
