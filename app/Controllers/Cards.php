@@ -46,9 +46,12 @@ class Cards extends BaseController {
         $searchQuery = $this->request->getGet('value');
 
         // Ensure there is a search query
-        if (is_null($searchQuery)) {
+        if (is_null($searchQuery) || empty($searchQuery) || $searchQuery === '') {
+            // Set flash data
+            $this->session->setFlashdata('error', 'Please enter a search query!');
+            
             // Redirect to the home page
-            return redirect()->to('/');
+            return redirect()->to('/cards');
         }
 
         // Convert the search query to a string
