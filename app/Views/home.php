@@ -1,6 +1,6 @@
 <div class="container">
     <div class="col">
-        <h2>Datenmon TCG</h2>
+        <h2>Danemon TCG</h2>
         <p class="subtitle">... now in early alpha!</p>
     </div>
     <div class="col">

@@ -1,6 +1,6 @@
 <div class="container">
     <h2>Advanced Querying</h2>
-    <p>Datenmon TCG supports querying the results via the use of one (or more) of the below keywords:</p>
+    <p>Danemon TCG supports querying the results via the use of one (or more) of the below keywords:</p>
     <div class="code-block">
         <p>name
             subtypes

@@ -1,7 +1,7 @@
 <div class="container">
     <h2>About!</h2>
 
-    <p>Welcome to Datenmon TCG! This website is a fan-mode utility designed to allow users to view and manage their Pokémon TCG collections.</p>
+    <p>Welcome to Danemon TCG! This website is a fan-mode utility designed to allow users to view and manage their Pokémon TCG collections.</p>
     <p>It is not affiliated with The Pokémon Company or Nintendo in any way.</p>
 
     <h2>Credits / Thanks</h2>

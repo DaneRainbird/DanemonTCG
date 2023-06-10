@@ -3,7 +3,7 @@
         <div class="navbar-brand">
             <a class="navbar-item navbar-brand-text" href="/">
                 <img src="/assets/img/logo.png" alt="Logo">
-                Datenmon TCG
+                Danemon TCG
             </a>
         </div>
         <div class="navbar-burger burger" data-target="navbarMenu">

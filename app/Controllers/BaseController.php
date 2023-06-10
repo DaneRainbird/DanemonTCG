@@ -2,14 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Libraries\DanemonDatabaseService;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
-use App\Libraries\DatenmonDatabaseService;
+use Psr\Log\LoggerInterface;;
 
 /**
  * Class BaseController
@@ -56,6 +55,6 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->session = \Config\Services::session();
-        $this->db = new DatenmonDatabaseService();
+        $this->db = new DanemonDatabaseService();
     }
 }

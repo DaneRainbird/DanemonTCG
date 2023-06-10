@@ -4,7 +4,7 @@ namespace App\Libraries;
 use CodeIgniter\Database\Exceptions\DataException;
 use Exception;
 
-class DatenmonDatabaseService {
+class DanemonDatabaseService {
 
             // Variable declarations 
             private $db;
