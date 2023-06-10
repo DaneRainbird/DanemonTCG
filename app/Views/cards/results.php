@@ -60,11 +60,33 @@
                 $totalPages = $pagination->getTotalPages();
                 $currentPage = $pagination->getPage();
 
-                foreach (range(1, $totalPages) as $page) {
-                    if ($page == $currentPage) {
-                        echo '<a class="page-button active" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
-                    } else {
-                        echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                if ($totalPages > 5) {
+                    // Add "first" page button
+                    if ($currentPage > 3) {
+                        echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=1">≪</a>';
+                    }
+
+                    // Add page buttons
+                    foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
+                        if ($page == $currentPage) {
+                            echo '<a class="page-button active" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                        } else {
+                            echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                        }
+                    }
+
+                    // Add "last" page button
+                    if ($currentPage < $totalPages - 2) {
+                        echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=' . $totalPages . '">≫</a>';
+                    }
+                } else {
+                    // Add page buttons
+                    foreach (range(1, $totalPages) as $page) {
+                        if ($page == $currentPage) {
+                            echo '<a class="page-button active" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                        } else {
+                            echo '<a class="page-button" href="/cards/search?value=' . $searchQuery . '&page=' . $page . '">' . $page .  "</a>";
+                        }
                     }
                 }
             }
