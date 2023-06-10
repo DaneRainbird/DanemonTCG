@@ -1,5 +1,5 @@
 <div class="container">
-    <h2>Advanced Querying</h2>
+    <h2 id="keywords">Advanced Querying</h2>
     <p>Danemon TCG supports querying the results via the use of one (or more) of the below keywords:</p>
     <div class="code-block">
         <p>name
@@ -27,9 +27,26 @@
         <p>name:pikachu set.series:Sword & Shield</p>
     </div>
 
-    <p>Detailed specifics for the available queries can be found at the <a href="https://docs.pokemontcg.io/" target="_blank">Pokémon TCG API Documentation</a>, but some useful values can also be found below:</p>
+    <p>Detailed specifics for the available queries can be found at the <a href="https://docs.pokemontcg.io/" target="_blank" class="fancy-link">Pokémon TCG API Documentation</a>, but some useful values can also be found below:</p>
 
-    <h2>Subtypes</h2>
+    <h2 id="types">Types</h2>
+    <p>The following are considered valid Types in the Pokémon TCG API database:</p>
+    <div class="code-block">
+        <p>Colourless
+            Darkness
+            Dragon
+            Fairy
+            Fighting
+            Fire
+            Grass
+            Lightning
+            Metal
+            Psychic
+            Water
+        </p>
+    </div>
+
+    <h2 id="subtypes">Subtypes</h2>
     <p>The following are considered valid Subtypes in the Pokémon TCG API database:</p>
     <div class="code-block">
         <p>BREAK
@@ -60,7 +77,7 @@
         </p>
     </div>
 
-    <h2>Supertypes</h2>
+    <h2 id="supertypes">Supertypes</h2>
     <p>The following are considered valid Supertypes in the Pokémon TCG API database:</p>
     <div class="code-block">
         <p>Energy
@@ -69,7 +86,7 @@
         </p>
     </div>
 
-    <h2>Rarities</h2>
+    <h2 id="rarities">Rarities</h2>
     <p>The following are considered valid rarities in the Pokémon TCG API database:</p>
     <div class="code-block">
         <p>Amazing Rare
