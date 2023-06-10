@@ -150,11 +150,22 @@
          * @return array The sets
          */
         public function getSets() : array {
-            // Get the sets
-            $sets = Pokemon::Set()->all();
+            // Check if the sets exist in cache first
+            $cachedSets = cache('sets');
 
-            // Return the sets
-            return $sets;
+            // If sets exist in cache, return them, otherwise get them from the API
+            if ($cachedSets) {
+                return $cachedSets;
+            } else {
+                // Get the sets
+                $sets = Pokemon::Set()->all();
+                
+                // Cache the sets for an hour
+                cache()->save('sets', $sets, 3600);
+
+                // Return the sets
+                return $sets;
+            }
         }
     }
 ?>

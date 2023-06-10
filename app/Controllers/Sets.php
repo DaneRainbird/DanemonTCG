@@ -23,7 +23,6 @@ class Sets extends BaseController {
 
     /**
      * Display the sets page.
-     * 
      */
     public function index() : string {
         // Get the sets
