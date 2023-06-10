@@ -113,18 +113,26 @@
         // Get the value of the display selector
         const displaySelectorValue = event.target.value;
 
-        // Conver the displaySelectorValue to it's corresponding value
-        const displaySelectorValueToDisplay = displaySelectorValue == 1 ? 'grid' : 'table';
+        // Convert the value to the appropriate argument
+        const viewVal = displaySelectorValue == 1 ? 'grid' : 'table';
 
-        // Get the current URL and append the view parameter
+        // Get the current URL and parse the query string
         const currentUrl = window.location.href;
-        const newUrl = currentUrl.includes('?') ? currentUrl + '&view=' + displaySelectorValueToDisplay : currentUrl + '?view=' + displaySelectorValueToDisplay;
+        const urlParts = currentUrl.split('?');
+        const baseUrl = urlParts[0];
+        const queryParams = new URLSearchParams(urlParts[1]);
+
+        // Set the "view" parameter to the new value
+        queryParams.set('view', viewVal);
+
+        // Construct the new URL with the updated query string
+        const newUrl = baseUrl + '?' + queryParams.toString();
 
         // Reload the page with the new URL
         window.location.href = newUrl;
     });
 
-    // Set the display selector value, and manually trigger the change event
+    // Set the display selector value
     displaySelector.value = <?= $displaySelectorValue ?>;
 
     /**
