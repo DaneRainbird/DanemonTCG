@@ -82,7 +82,9 @@ class Cards extends BaseController {
             'title' => 'Search',
             'styles' => [
                 '/assets/css/main.css'
-            ]
+            ],
+            'ogTitle' => 'Danemon TCG | Search',
+            'ogDescription' => 'Search results for ' . $searchQuery
         ]);
         echo view('fragments/header');
         echo view('cards/results', [
@@ -121,7 +123,11 @@ class Cards extends BaseController {
             'title' => 'Card Details',
             'styles' => [
                 '/assets/css/main.css'
-            ]
+            ],
+            'ogTitle' => 'Danemon TCG | ' . $card['name'] . ' - ' . $card['id'],
+            'ogDescription' => 'Details for ' . $card['name'] . ' - ' . $card['id'],
+            'ogImage' => $card['images']['large']
+
         ]);
         echo view('fragments/header');
         echo view('cards/details', [

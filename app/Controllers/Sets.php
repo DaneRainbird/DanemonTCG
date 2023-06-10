@@ -32,7 +32,9 @@ class Sets extends BaseController {
             'title' => 'Sets',
             'styles' => [
                 'assets/css/main.css'
-            ]
+            ],
+            'ogTitle' => 'Danemon TCG | Sets',
+            'ogDescription' => 'View all the sets available in the Pokémon TCG API.'
         ]);
         echo view('fragments/header');
         echo view('sets/index', [
