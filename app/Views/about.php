@@ -1,14 +1,14 @@
 <div class="container">
-    <h2 id="about">About!</h2>
+    <h2 id="about">About!<span class="copy">🔗</span></h2>
 
     <p>Welcome to Danemon TCG! This website is a fan-mode utility designed to allow users to view and manage their Pokémon TCG collections.</p>
     <p>It is not affiliated with The Pokémon Company or Nintendo in any way.</p>
 
-    <h2 id="suggestions">Suggestions / Comments?</h2>
+    <h2 id="suggestions">Suggestions / Comments?<span class="copy">🔗</span></h2>
     <p>Suggestions, comments, and criticism are welcome (but please make sure it's constructive!).</p>
     <p>Feel free to send me an email at <span class="code">danemon [at] danerainbird.me</span>. I'll get back to you as soon as I can!</p>
 
-    <h2 id="credits">Credits / Thanks</h2>
+    <h2 id="credits">Credits / Thanks<span class="copy">🔗</span></h2>
 
     <p>Huge thanks to the following people / groups that have made this project possible:</p>
     <ul>
