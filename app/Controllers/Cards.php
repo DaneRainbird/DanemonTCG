@@ -88,7 +88,8 @@ class Cards extends BaseController {
         echo view('cards/results', [
             'cards' => $results['cards'],
             'pagination' => $results['pagination'],
-            'searchQuery' => $searchQuery
+            'searchQuery' => $searchQuery,
+            'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid'
         ]);
         return view('fragments/footer');
     }
