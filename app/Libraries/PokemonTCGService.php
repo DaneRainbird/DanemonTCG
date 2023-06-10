@@ -39,19 +39,19 @@
          * @param string $query The query to parse
          * @return array The parsed query
          */
-        private function parseQuery(string $query) : array {
-            $queryParts = explode(' ', $query);
+        private function parseQuery(string $query): array {
             $parsedQuery = [];
+            $pattern = '/(\w[\w.]*):(".*?"|\S+)/';
         
-            foreach ($queryParts as $part) {
-                $pos = strpos($part, ':');
-                if ($pos !== false) {
-                    $keyword = substr($part, 0, $pos);
-                    $value = substr($part, $pos + 1);
+            // Find all query parts
+            preg_match_all($pattern, $query, $matches, PREG_SET_ORDER);
         
-                    if (in_array($keyword, $this->knownQueryKeywords)) {
-                        $parsedQuery[$keyword] = $value;
-                    }
+            foreach ($matches as $match) {
+                $keyword = $match[1];
+                $value = trim($match[2], '"');
+        
+                if (in_array($keyword, $this->knownQueryKeywords)) {
+                    $parsedQuery[$keyword] = $value;
                 }
             }
         
@@ -61,7 +61,7 @@
             }
         
             return $parsedQuery;
-        }
+        }  
 
         /**
          * Search for cards.
