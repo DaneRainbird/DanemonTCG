@@ -73,7 +73,7 @@ class Cards extends BaseController {
                 return redirect()->to('/');
             }
         }
-
+        
         // Get the cards and pagination data
         $results = $this->pokemonTCGService->search($searchQuery, $page, $pageSize);
         

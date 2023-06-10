@@ -75,32 +75,50 @@
             // Parse the query
             $parsedQuery = $this->parseQuery($query);
 
-            // Check if the page number is valid
-            if ($page < 1 || is_null($page)) {
-                $page = 1;
+            // Check if this query and it's results exist in cache already
+            $cacheKey = 'search_' . $query . '-' . $page . '-' . $pageSize;
+            // Generate a cache key for the query by hashing it (prevents cache key length issues / invalid characters)
+            $cacheKey = md5($cacheKey);
+            $cachedResults = cache($cacheKey);
+
+            // If the results exist in cache, return them
+            if ($cachedResults) {
+                return $cachedResults;
+            } else {
+                // Check if the page number is valid
+                if ($page < 1 || is_null($page)) {
+                    $page = 1;
+                }
+                
+                // Check if the page size is valid
+                if ($pageSize < 1 || is_null($pageSize)) {
+                    $pageSize = 25;
+                }
+
+                // Search for cards
+                $result = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->all();
+                $paginationData = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->pagination();
+
+                $cards = [];
+
+                // Get the cards
+                foreach ($result as $card) {
+                    array_push($cards, $card->toArray());
+                }
+
+                // Cache the results
+                cache()->save($cacheKey, [
+                    'cards' => $cards,
+                    'pagination' => $paginationData
+                ], 3600);
+
+                // Return the cards
+                return [
+                    'cards' => $cards,
+                    'pagination' => $paginationData
+                ];
             }
-            
-            // Check if the page size is valid
-            if ($pageSize < 1 || is_null($pageSize)) {
-                $pageSize = 25;
-            }
 
-            // Search for cards
-            $result = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->all();
-            $paginationData = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->pagination();
-
-            $cards = [];
-
-            // Get the cards
-            foreach ($result as $card) {
-                array_push($cards, $card->toArray());
-            }
-
-            // Return the cards
-            return [
-                'cards' => $cards,
-                'pagination' => $paginationData
-            ];
         }
 
         /**
