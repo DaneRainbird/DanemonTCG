@@ -86,7 +86,7 @@ function copyToClipBoard(text, location) {
         return;
     } else {
         // If the browser does support the Clipboard API, use it to copy the text
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(linkToCopy);
     }
 }
 
