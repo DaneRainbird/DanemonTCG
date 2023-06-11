@@ -1,7 +1,10 @@
 <div class="container">
     <div class="col">
         <h2>Danemon TCG</h2>
-        <p class="subtitle">... now in early alpha!</p>
+        <p>Welcome to Danemon TCG - a fan-mode utility designed to allow users to view and manage their Pokémon TCG collections.</p>
+        <p>Please note that this website is <em>constantly</em> under development, and things may change. I'm not planning on modifying base functionality, and if I do, it'll be with good reason.</p>
+        <p>As of 2023-06-11, I consider this website to be in an <span style="color: red;">alpha</span> state.</p>
+        <p>While the site is in alpha, account creation is restricted and must be requested. Please <a href="/about#registering" class="fancy-link">see here for more information</a>.</p>
     </div>
     <div class="col">
         <h2>Search for cards!</h2>
