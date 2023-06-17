@@ -155,7 +155,7 @@ class Users extends BaseController {
         // If the user is logged in, then display the profile page
         if (session()->get('username')) {
             echo view('fragments/html_head', [
-                'title' => 'Sets',
+                'title' => 'Profile',
                 'styles' => [
                     '/assets/css/main.css'
                 ]

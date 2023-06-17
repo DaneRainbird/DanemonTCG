@@ -28,7 +28,7 @@ class Cards extends BaseController {
      */
     public function index() : string {
         echo view('fragments/html_head', [
-            'title' => 'Home',
+            'title' => 'Cards',
             'styles' => [
                 'assets/css/main.css'
             ]
@@ -79,7 +79,7 @@ class Cards extends BaseController {
         
         // Render the view
         echo view('fragments/html_head', [
-            'title' => 'Search',
+            'title' => 'Search - ' . $searchQuery . ' - Page ' . $results['pagination']->getPage(),
             'styles' => [
                 '/assets/css/main.css'
             ],
@@ -120,7 +120,7 @@ class Cards extends BaseController {
 
         // Render the view
         echo view('fragments/html_head', [
-            'title' => 'Card Details',
+            'title' => 'Card Details - ' . $card['id'],
             'styles' => [
                 '/assets/css/main.css'
             ],

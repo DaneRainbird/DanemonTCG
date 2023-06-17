@@ -31,7 +31,7 @@ class Home extends BaseController
 
     public function queries() {
         echo view('fragments/html_head', [
-            'title' => 'About',
+            'title' => 'About - Queries',
             'styles' => [
                 '/assets/css/main.css'
             ]
