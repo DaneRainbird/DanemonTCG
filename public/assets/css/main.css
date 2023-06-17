@@ -29,6 +29,13 @@ h2 {
     border-bottom: 1px solid #009879;
 }
 
+h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    text-decoration: underline; 
+}
+
 .copy {
     margin: 1rem 0;
     display: none;
