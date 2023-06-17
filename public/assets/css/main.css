@@ -489,26 +489,28 @@ select {
     flex-direction: row;
     flex-wrap: wrap;
     width: 80vw;
-    gap: 10px;
+    gap: 10rem;
     margin: 1rem;
-    flex-shrink: 0;
 }
 
 .card-details-image {
-    flex: 1;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     display: flex;
     justify-content: center;
     align-items: center;
+    flex: 1;
 }
 
 .card-details-image img {
-    height: 60vh;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .card-details-info {
-    flex: 1;
+    flex: 1.25;
     display: flex;
     flex-direction: column;
     align-self: center;
@@ -607,7 +609,7 @@ select {
     }
 
     .card-details-image img {
-        height: 40vh;
+        height: 100%;
     }
 
     .card-details-info {
