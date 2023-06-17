@@ -46,17 +46,27 @@
             // Find all query parts
             preg_match_all($pattern, $query, $matches, PREG_SET_ORDER);
         
+            // Loop through the query parts and parse them
             foreach ($matches as $match) {
                 $keyword = $match[1];
                 $value = trim($match[2], '"');
-        
+
                 if (in_array($keyword, $this->knownQueryKeywords)) {
                     $parsedQuery[$keyword] = $value;
                 }
+
+                // Remove the query part from the query string
+                $query = str_replace($match[0], '', $query);
+            }
+
+            // For whatever remains of the query string, assume it's the name
+            $query = trim($query);
+            if (!empty($query)) {
+                $parsedQuery['name'] = $query;
             }
         
+            // If no valid query parts were found, assume the query is the name
             if (empty($parsedQuery)) {
-                // Default query if no valid query parts were found
                 $parsedQuery['name'] = $query;
             }
         
