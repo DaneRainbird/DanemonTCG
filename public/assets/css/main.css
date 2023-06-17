@@ -572,9 +572,16 @@ select {
         flex-direction: column;
     }
 
+    .dropdown {
+        display: none; /* Hide table / cards dropdown on mobile */
+    }
+
     .controls .search-container {
         width: 100%;
-        margin-bottom: 10px;
+    }
+
+    .controls .search-container input[type="text"] {
+        height: 30px;
     }
 
     .card-details {
