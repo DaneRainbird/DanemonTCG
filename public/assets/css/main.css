@@ -428,7 +428,7 @@ h2:hover .copy {
 /* Options / Controls Section */
 .controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     margin: 1rem 0;
 }
@@ -438,6 +438,15 @@ select {
     border-radius: 5px;
     padding: 5px;
     font-size: 1rem;
+}
+
+.controls .search-container {
+    width: 35%;
+    height: 25%;
+}
+
+.controls .search-container input[type="text"] {
+    height: 20px;
 }
 
 /* Pagination */
@@ -559,6 +568,15 @@ select {
 
 /* Responsive Design for Mobile */
 @media screen and (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+    }
+
+    .controls .search-container {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
     .card-details {
         flex-direction: column;
         width: 100vw;
