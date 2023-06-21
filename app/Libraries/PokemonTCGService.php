@@ -2,6 +2,7 @@
     namespace App\Libraries;
 
     use Pokemon\Pokemon;
+    use Pokemon\Models\Pagination;
 
     class PokemonTCGService {
 
@@ -66,7 +67,7 @@
             }
         
             // If no valid query parts were found, assume the query is the name
-            if (empty($parsedQuery)) {
+            if (empty($parsedQuery) && !empty($query)) {
                 $parsedQuery['name'] = $query;
             }
         
@@ -85,8 +86,24 @@
             // Parse the query
             $parsedQuery = $this->parseQuery($query);
 
+            // If the query is empty (i.e. it failed to be parsed at all) return an search that returns no results
+            if (empty($parsedQuery)) {
+                // Create a pagination object that returns no results (so the UI doesn't break)
+                $pagination = new Pagination();
+                $pagination->setPage(1);
+                $pagination->setPageSize(0);
+                $pagination->setCount(0);
+                $pagination->setTotalCount(0);
+
+                return [
+                    'cards' => [],
+                    'pagination' => $pagination
+                ];
+            }
+
             // Check if this query and it's results exist in cache already
             $cacheKey = 'search_' . $query . '-' . $page . '-' . $pageSize;
+
             // Generate a cache key for the query by hashing it (prevents cache key length issues / invalid characters)
             $cacheKey = md5($cacheKey);
             $cachedResults = cache($cacheKey);
