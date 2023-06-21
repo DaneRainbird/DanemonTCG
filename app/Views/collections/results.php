@@ -153,7 +153,7 @@
 
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    createNotification("Card successfully delete from the collection!", "is-success");
+                    createNotification("Card successfully deleted from the collection!", "is-success");
                     button.parentElement.parentElement.remove();
                 } else if (this.readyState == 4 && this.status == 400) {
                     createNotification("Card could not be removed from the collection: " + JSON.parse(this.responseText).message, "is-danger");
