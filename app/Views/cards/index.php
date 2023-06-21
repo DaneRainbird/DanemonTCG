@@ -1,6 +1,6 @@
 <?php 
     $sampleSearches = [
-        '0' => ['all Grass-type VMAX cards from the "Paldea Evolved" set', 'set.id:sv2 types:grass rarity:vmax'],
+        '0' => ['all Grass-type Rare cards from the "Paldea Evolved" set', 'set.id:sv2 types:grass rarity:"Rare"'],
         '1' => ['all cards with "Charizard" in their name', 'name:Charizard'],
         '2' => ['all cards with "Charizard" in their name, but only from the "Vivid Voltage" set', 'name:Charizard set.id:swsh4'],
         '3' => ['all Grass-type cards', 'types:grass'],
