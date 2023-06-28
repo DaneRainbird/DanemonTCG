@@ -24,7 +24,7 @@
 
     <p>For example, to search for all Pikachu cards in the Sword and Shield sets, you would use the following query:</p>
     <div class="code-block">
-        <p>name:pikachu set.series:Sword & Shield</p>
+        <p>name:pikachu set.series:"Sword & Shield"</p>
     </div>
 
     <p>Detailed specifics for the available queries can be found at the <a href="https://docs.pokemontcg.io/" target="_blank" class="fancy-link">Pokémon TCG API Documentation</a>, but some useful values can also be found below:</p>
