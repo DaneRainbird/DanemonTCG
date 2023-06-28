@@ -23,7 +23,7 @@
     });
 ?>
 
-<div class="cards container">
+<div class="sets">
     <?php foreach ($setsBySeries as $series => $sets) : ?>
         <div class="series">
             <h2 id="<?= $set['id']; ?>"><?= $series; ?></h2>

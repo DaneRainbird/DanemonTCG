@@ -297,6 +297,7 @@ h2:hover .copy {
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
     margin: 1rem;
     padding: 1rem;
@@ -311,16 +312,18 @@ h2:hover .copy {
 
 .cards {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
+    flex-direction: row;
     justify-content: center;
-    align-items: stretch;
-    align-content: stretch;
+    align-items: center;
+    align-content: center;
+    flex-grow: 1;
 }
 
 .cards a {
     text-decoration: none;
     color: black;
+    display: flex;
 }
 
 .card-image {
@@ -435,9 +438,16 @@ h2:hover .copy {
 /* Options / Controls Section */
 .controls {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 1rem 0;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center
+}
+
+.control {
+    flex: 0 0 auto;
+    margin: 16px;
 }
 
 select {
@@ -447,13 +457,8 @@ select {
     font-size: 1rem;
 }
 
-.controls .search-container {
-    width: 35%;
-    height: 25%;
-}
-
-.controls .search-container input[type="text"] {
-    height: 20px;
+.control .search-container {
+    width: 50vw;
 }
 
 /* Pagination */
@@ -487,94 +492,144 @@ select {
 .card-details {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
-    width: 80vw;
-    gap: 10rem;
-    margin: 1rem;
-}
-
-.card-details-image {
-    height: 100%;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-    display: flex;
     justify-content: center;
     align-items: center;
+    align-content: center;
+    margin-left: 10rem;
+    margin-right: 10rem;
     flex: 1;
+    gap: 1rem;
 }
 
-.card-details-image img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
-.card-details-info {
-    flex: 1.25;
-    display: flex;
-    flex-direction: column;
-    align-self: center;
+.card-detail {
+    flex: 0 0 auto;
+    margin: 16px;
     text-align: center;
+    width: 50%;
 }
 
-.card-details-info h2 {
-    text-align: center;
+.card-detail-image {
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    width: 40vw;
 }
 
-.card-details-info h1 {
+.card-detail h1 {
     margin: 0;
     width: 100%;
     border-bottom: 1px solid #009879;
 }
 
-.card-details-info p a {
+.card-detail a {
     color: #009879;
     margin: 1rem;
 }
 
-.card-details-info p a:hover {
+.card-detail a:hover {
     color: #007a5f;
 }
 
-.card-details-info p a img {
-    padding-right: 0.5rem;
+/* Sets */
+.sets {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 80vw;
+    margin: 0 auto;
 }
 
-/* Series */
+.sets a {
+    text-decoration: none;
+    color: black;
+}
+
 .series {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    width: 80vw;
-    margin: 1rem;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex: 1;
+    gap: 1rem;
 }
 
 .series-sets {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex: 1;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
 .set-container {
-    flex: none;
-    width: 33%;
+    flex: 0 0 500px; 
+    margin-right: 20px; 
+    margin-bottom: 20px; 
 }
 
 .set-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 140px;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .set-image img {
     max-width: 100%;
     max-height: 100%;
+    object-fit: scale-down;
 }
 
 /* Collections-specific */
 .collections a {
     text-decoration: none;
     color: black;
+}
+
+/* Responsive Design for Ultra-wide monitors */
+@media screen and (min-width: 2000px) {
+    .card-detail-image {
+        width: 40rem;
+    }
+}
+
+/* Responsive Design for less than 1300 pixels, but more than 600px*/
+@media screen and (max-width: 1300px) {
+    .card-details {
+        flex-direction: column;
+        width: 100vw;
+        flex-shrink: 1;
+        gap: 1rem;
+        text-align: center;
+        margin: 0;
+    }
+    
+    .card-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        width: 90%;
+        align-items: center;
+        flex-grow: 1;
+    }
+
+    .card-detail:nth-child(2) {
+        flex-grow: 2;
+      }
+
+    .card-detail-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
 }
 
 /* Responsive Design for Mobile */
@@ -595,54 +650,6 @@ select {
         height: 30px;
     }
 
-    .card-details {
-        flex-direction: column;
-        width: 100vw;
-        flex-shrink: 1;
-    }
-
-    .card-details-image {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .card-details-image img {
-        height: 100%;
-    }
-
-    .card-details-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-self: center;
-        text-align: center;
-    }
-
-    .card-details-info h2 {
-        text-align: center;
-    }
-
-    .card-details-info h1 {
-        margin: 0;
-        width: 100%;
-        border-bottom: 1px solid #009879;
-    }
-
-    .card-details-info p a {
-        color: #009879;
-        margin: 1rem;
-    }
-
-    .card-details-info p a:hover {
-        color: #007a5f;
-    }
-
-    .card-details-info p a img {
-        padding-right: 0.5rem;
-    }
-
     .ebay-links a {
         display: block;
     }
@@ -655,6 +662,7 @@ select {
     .set-container {
         flex: none;
         width: 100%;
+        margin: 0;
     }
 
     .set-image {
