@@ -2,6 +2,7 @@
     <h2 id="about">About!<span class="copy">🔗</span></h2>
     <p>Welcome to Danemon TCG! This website is a fan-mode utility designed to allow users to view and manage their Pokémon TCG collections.</p>
     <p>It is not affiliated with The Pokémon Company or Nintendo in any way.</p>
+    <p>This project is entirely open source, and the code is available on <a class="fancy-link" href="https://github.com/DaneRainbird/DanemonTCG" target="_blank">GitHub</a>.</p>
 
     <h2 id="registering">Registering<span class="copy">🔗</span></h2>
     <p>While the site is in alpha, I've restricted account creation.</p>
