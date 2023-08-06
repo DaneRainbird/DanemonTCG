@@ -643,7 +643,7 @@ select {
         flex-direction: column;
     }
 
-    .dropdown {
+    #card-search-controls {
         display: none; /* Hide table / cards dropdown on mobile */
     }
 

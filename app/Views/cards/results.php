@@ -15,7 +15,7 @@
             </form>
         </div>
     </div>
-    <div class="control">
+    <div class="control" id="card-search-controls">
         <div class="dropdown">
             <label for="display-selector">Display as:</label>
             <select id="display-selector">
