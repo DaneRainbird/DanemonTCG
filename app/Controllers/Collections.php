@@ -42,9 +42,12 @@ class Collections extends BaseController {
             array_push($cards, $this->pokemonTCGService->getCard($result->card_id));
         }
 
+        // Get the collection name
+        $collectionName = $this->db->getCollectionName($collectionId);
+
         // Render the card search results view
         echo view('fragments/html_head', [
-            'title' => 'Search',
+            'title' => $collectionName,
             'styles' => [
                 '/assets/css/main.css'
             ]
@@ -53,7 +56,7 @@ class Collections extends BaseController {
         echo view('collections/results', [
             'cards' => $cards,
             'collectionId' => $collectionId,
-            'collectionName' => $this->db->getCollectionName($collectionId)
+            'collectionName' => $collectionName
         ]);
         return view('fragments/footer');
     }
