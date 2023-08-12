@@ -12,7 +12,9 @@ class Home extends BaseController
                 'assets/css/main.css'
             ]
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'home'
+        ]);
         echo view('home');
         return view('fragments/footer');
     }
@@ -24,7 +26,9 @@ class Home extends BaseController
                 '/assets/css/main.css'
             ]
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'about'
+        ]);
         echo view('about');
         return view('fragments/footer');
     }

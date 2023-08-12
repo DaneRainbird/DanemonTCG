@@ -36,7 +36,9 @@ class Sets extends BaseController {
             'ogTitle' => 'Danemon TCG | Sets',
             'ogDescription' => 'View all the sets available in the Pokémon TCG API.'
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'sets'
+        ]);
         echo view('sets/index', [
             'sets' => $sets
         ]);

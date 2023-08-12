@@ -33,7 +33,9 @@ class Cards extends BaseController {
                 'assets/css/main.css'
             ]
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'cards'
+        ]);
         echo view('cards/index');
         return view('fragments/footer');
     }
@@ -86,7 +88,9 @@ class Cards extends BaseController {
             'ogTitle' => 'Danemon TCG | Search',
             'ogDescription' => 'Search results for ' . $searchQuery
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'cards'
+        ]);
         echo view('cards/results', [
             'cards' => $results['cards'],
             'pagination' => $results['pagination'],
@@ -129,7 +133,9 @@ class Cards extends BaseController {
             'ogImage' => $card['images']['large']
 
         ]);
-        echo view('fragments/header');
+        echo view('fragments/header', [
+            'activePage' => 'cards'
+        ]);
         echo view('cards/details', [
             'card' => $card,
             'collections' => $userCollections

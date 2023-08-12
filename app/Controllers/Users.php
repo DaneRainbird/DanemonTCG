@@ -160,7 +160,9 @@ class Users extends BaseController {
                     '/assets/css/main.css'
                 ]
             ]);
-            echo view('fragments/header');
+            echo view('fragments/header', [
+                'activePage' => 'profile'
+            ]);
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),

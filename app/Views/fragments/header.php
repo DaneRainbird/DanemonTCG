@@ -1,3 +1,7 @@
+<?php 
+    $activePage = $activePage ?? ''; // Ensure that $activePage is defined regardless of whether it was passed in
+?>
+
 <nav class="navbar" id="navbar">
     <div class="container">
         <div class="navbar-brand">
@@ -14,11 +18,11 @@
         <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-links-container">
                 <ul class="navbar-links">
-                    <li><a class="navbar-item" href="/about">About</a></li>
-                    <li><a class="navbar-item" href="/cards">Cards</a></li>
-                    <li><a class="navbar-item" href="/sets">Sets</a></li>
+                    <li><a class="navbar-item <?php if ($activePage === 'about') echo 'active' ?>" href="/about">About</a></li>
+                    <li><a class="navbar-item <?php if ($activePage === 'cards') echo 'active' ?>" href="/cards">Cards</a></li>
+                    <li><a class="navbar-item <?php if ($activePage === 'sets') echo 'active' ?>" href="/sets">Sets</a></li>
                     <?php if (session()->get('username')): ?>
-                        <li><a class="navbar-item" href="/users/profile">Profile</a></li>
+                        <li><a class="navbar-item  <?php if ($activePage === 'profile') echo 'active' ?>" href="/users/profile">Profile</a></li>
                         <li><a class="navbar-item" href="/users/logout">Logout</a></li>
                     <?php else: ?>
                         <li><a class="navbar-item" href="/login">Login</a></li>
