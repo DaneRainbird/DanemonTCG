@@ -750,4 +750,8 @@ select {
     .navbar-burger {
         display: block;
     }
+
+    .active {
+        background-color: #e4dfdf;
+    }
 }
