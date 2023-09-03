@@ -4,10 +4,16 @@
     "description": "Danemon is a webapp that allows you to view and store Pokémon TCG Cards",
     "homepage": "https://danerainbird.me/",
     "license": "GPL-3.0-only",
+    "repositories": {
+        "pokemon-tcg-sdk-php": {
+            "type": "vcs",
+            "url": "https://github.com/DaneRainbird/pokemon-tcg-sdk-php"
+        }
+    },
     "require": {
         "php": "^7.4 || ^8.0",
         "codeigniter4/framework": "^4.0",
-        "pokemon-tcg/pokemon-tcg-sdk-php": "^2.1"
+        "danerainbird/pokemon-tcg-sdk-php": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9",
