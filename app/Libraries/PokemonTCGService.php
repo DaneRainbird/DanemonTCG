@@ -53,6 +53,22 @@
                 $value = trim($match[2], '"');
 
                 if (in_array($keyword, $this->knownQueryKeywords)) {
+
+                    // If the value is a comma-separated list (e.g. types:fire,water), then split it into an array
+                    if (strpos($value, ',') !== false) {
+                        $tempValue = explode(',', $value);
+                        
+                        // If the value list does not contain an operator ("AND" or "OR", case-insensitive) in it anywhere, then add "AND" as the default operator
+                        if (!preg_grep('/\b(AND|OR)\b/i', $tempValue)) {
+                            array_unshift($tempValue, 'AND');
+                        } else {
+                            // Move the operator to the start of the array
+                            $operator = preg_grep('/\b(AND|OR)\b/i', $tempValue);
+                            $tempValue = array_merge($operator, array_diff($tempValue, $operator));
+                        }
+                        $value = $tempValue;
+                    }
+
                     $parsedQuery[$keyword] = $value;
                 }
 
@@ -120,6 +136,19 @@
                 // Check if the page size is valid
                 if ($pageSize < 1 || is_null($pageSize)) {
                     $pageSize = 25;
+                }
+
+                // If the parsed query contains an array under one of it's values, then split it into something along the lines of types:[AND, fire, water] -> types:fire AND types:water
+                foreach ($parsedQuery as $key => $value) {
+                    if (is_array($value)) {
+                        $tempValue = [];
+                        foreach ($value as $item) {
+                            if (is_string($item)) {
+                                array_push($tempValue, $item);
+                            }
+                        }
+                        $parsedQuery[$key] = $tempValue;
+                    }
                 }
 
                 // Search for cards
