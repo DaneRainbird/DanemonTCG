@@ -45,6 +45,9 @@ function createNotification(message, type) {
     `;
 
     navbar.parentNode.insertBefore(notificationBox, navbar.nextSibling);
+
+    // Scroll to the notification box 
+    notificationBox.scrollIntoView();
 }
 
 /**
