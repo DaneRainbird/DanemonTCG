@@ -39,7 +39,7 @@ class Collections extends BaseController {
         // Loop through each card and get it's details
         $cards = [];
         foreach ($results as $result) {
-            array_push($cards, $this->pokemonTCGService->getCard($result->card_id));
+            array_push($cards, $this->pokemonTCGService->getCard($result->card_id, 'id,name,number,images,set'));
         }
 
         // Get the collection name
@@ -74,7 +74,7 @@ class Collections extends BaseController {
         // Loop through each card and get it's details
         $cards = [];
         foreach ($results as $result) {
-            array_push($cards, $this->pokemonTCGService->getCard($result->card_id));
+            array_push($cards, $this->pokemonTCGService->getCard($result->card_id, 'id,name,number,images,set'));
         }
 
         // Render the card search results view
