@@ -152,8 +152,8 @@
                 }
 
                 // Search for cards
-                $result = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->all();
-                $paginationData = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->pagination();
+                $result = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->selects('id,name,number,images,set')->all();
+                $paginationData = Pokemon::Card()->where($parsedQuery)->page($page)->pageSize($pageSize)->selects('id,name,number,images,set')->pagination();
 
                 $cards = [];
 
@@ -181,20 +181,25 @@
          * Get a card by its ID.
          * 
          * @param string $id The ID of the card
+         * @param string $selects The fields to select. Defaults to null (all fields)
          * @return array The card
          */
-        public function getCard(string $id) : array {
+        public function getCard(string $id, string $selects = null) : array {
             // Check if the card exists in cache first
-            $cachedCard = cache('card_' . $id);
+            $cachedCard = cache('card_' . $id . '_' . str_replace(',', '', $selects));
             if ($cachedCard) {
                 return $cachedCard;
             }
 
             // If not, get the card from the API
-            $card = Pokemon::Card()->find($id);
+            if ($selects !== null) {
+                $card = Pokemon::Card()->find($id, $selects);
+            } else {
+                $card = Pokemon::Card()->find($id);
+            }
 
             // Cache the card
-            cache()->save('card_' . $id, $card->toArray(), 3600);
+            cache()->save('card_' . $id . '_' . str_replace(',', '', $selects), $card->toArray(), 3600);
 
             // Return the card
             return $card->toArray();
