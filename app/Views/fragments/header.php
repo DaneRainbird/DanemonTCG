@@ -1,5 +1,6 @@
 <?php 
     $activePage = $activePage ?? ''; // Ensure that $activePage is defined regardless of whether it was passed in
+    $isAdmin = session()->get('isAdmin');
 ?>
 
 <nav class="navbar" id="navbar">
@@ -18,6 +19,7 @@
         <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-links-container">
                 <ul class="navbar-links">
+                    <li><a class="navbar-item <?php if ($isAdmin === 'true') echo 'admin-nav' ?>" href="#">ADMIN MODE</a></li>
                     <li><a class="navbar-item <?php if ($activePage === 'about') echo 'active' ?>" href="/about">About</a></li>
                     <li><a class="navbar-item <?php if ($activePage === 'cards') echo 'active' ?>" href="/cards">Cards</a></li>
                     <li><a class="navbar-item <?php if ($activePage === 'sets') echo 'active' ?>" href="/sets">Sets</a></li>
