@@ -19,7 +19,7 @@
         <div id="navbarMenu" class="navbar-menu">
             <div class="navbar-links-container">
                 <ul class="navbar-links">
-                    <li><a class="navbar-item <?php if ($isAdmin === 'true') echo 'admin-nav' ?>" href="#">ADMIN MODE</a></li>
+                    <?php if ($isAdmin === 'true') echo '<li><a class="navbar-item admin-nav href="#">ADMIN MODE</a></li>' ?>
                     <li><a class="navbar-item <?php if ($activePage === 'about') echo 'active' ?>" href="/about">About</a></li>
                     <li><a class="navbar-item <?php if ($activePage === 'cards') echo 'active' ?>" href="/cards">Cards</a></li>
                     <li><a class="navbar-item <?php if ($activePage === 'sets') echo 'active' ?>" href="/sets">Sets</a></li>
