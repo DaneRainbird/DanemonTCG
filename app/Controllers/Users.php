@@ -148,7 +148,7 @@ class Users extends BaseController {
     /**
      * Profile function
      * 
-     * Displays the user's profile page
+     * Displays the user's profile page. If the user is an admin, it will display all collections in the system. 
      * 
      * @return mixed CodeIgniter\HTTP\RedirectResponse::to redirect to login page or view::load profile page 
      */
@@ -167,7 +167,7 @@ class Users extends BaseController {
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),
-                'collections' => $this->db->getUserCollections(session()->get('uid'))
+                'collections' => session()->get('isAdmin') === "true" ? $this->db->getAllCollections() : $this->db->getUserCollections(session()->get('uid'))
             ]);
             return view('fragments/footer');
         }

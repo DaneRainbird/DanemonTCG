@@ -112,6 +112,25 @@ class DanemonDatabaseService {
             }
 
             /**
+             * Gets all collections in the system (to be used by admins only)
+             * 
+             * @return array Returns an array of collection objects
+             */
+            public function getAllCollections() {
+                // Get all collections
+                $query = $this->db->table('collections')->get();
+                
+                // Append the Okta username of the collection owner to each collection object
+                $collections = $query->getResult();
+                foreach ($collections as $collection) {
+                    $query = $this->db->table('users')->getWhere(['okta_uid' => $collection->okta_id]);
+                    $collection->username = $query->getResult()[0]->email;
+                }
+
+                return $collections;
+            }
+
+            /**
              * Gets all of the cards in a collection 
              * 
              * @param int $collectionId The ID of the collection to get cards for

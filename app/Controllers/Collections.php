@@ -27,8 +27,14 @@ class Collections extends BaseController {
      * @param int $collectionId The ID of the collection to view.
      */
     public function view($collectionId) {
-        // Ensure that the user is signed in, and that they own this collection
-        if (!$this->session->get('uid') || !$this->db->userOwnsCollection($this->session->get('uid'), $collectionId)) {
+        // Check if the user is signed in
+        if (!$this->session->get('uid')) {
+            session()->setFlashdata('error', 'You are not signed in!');
+            return redirect()->to('/');
+        }
+
+        // If the user is not an admin or does not own the collection, redirect to the home page
+        if ($this->session->get('isAdmin') === "false" && !$this->db->userOwnsCollection($this->session->get('uid'), $collectionId)) {
             session()->setFlashdata('error', 'You do not have permission to view this collection!');
             return redirect()->to('/');
         }
