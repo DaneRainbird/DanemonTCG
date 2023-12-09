@@ -48,6 +48,7 @@ class DanemonDatabaseService {
 
             /**
              * Creates a new user in the database with their Okta UID ("sub") and email address
+             * Defaults to creating a user with the "user" role (i.e. 0)
              * 
              * @param string $uid Okta UID
              * @param string $email Email address
@@ -57,7 +58,8 @@ class DanemonDatabaseService {
             public function createUser($uid, $email) {
                 $data = [
                     'okta_uid' => $uid,
-                    'email' => $email
+                    'email' => $email,
+                    'role' => 0 // 0 = user, 1 = admin
                 ];
 
                 // Try to insert the user, return error if it fails 
@@ -66,6 +68,28 @@ class DanemonDatabaseService {
                 } 
 
                 return true;
+            }
+
+            /**
+             * Checks if the user with the specified Okta UID ("sub") is an admin
+             * 
+             * @param string $uid Okta UID
+             * 
+             * @return bool Returns true if the user is an admin, or false if not
+             */
+            public function isAdmin($uid) {
+                // Try to get the user, return error if it fails 
+                $query = $this->db->table('users')->getWhere(['okta_uid' => $uid]);
+
+                if ($query->getResult()) {
+                    $result = $query->getResult()[0];
+
+                    if ($result->role == 1) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             /** 

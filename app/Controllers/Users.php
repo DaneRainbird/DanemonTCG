@@ -91,6 +91,7 @@ class Users extends BaseController {
         session()->set('username', $result['username']);
         session()->set('id_token', $result['id_token']);
         session()->set('uid', $result['sub']);
+        session()->set('isAdmin', $this->db->isAdmin($result['sub']) ? 'true' : 'false');
         session()->setFlashdata('success', 'You have successfully logged in!');
 
         // Create user in database if they don't already exist
