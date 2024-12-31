@@ -12,6 +12,7 @@
     <meta property="og:image" content="<?= isset($ogImage) ? $ogImage : '/assets/img/logo.png' ?>">
     <meta property="og:url" content="https://danemon.danerainbird.me">
     <meta property="og:type" content="website">
+    <meta property="og:logo" content="<?= isset($ogImage) ? $ogImage : '/assets/img/logo.png' ?>">
 
     <!-- Styles -->
     <?php 
