@@ -4,6 +4,14 @@
         // Set the display selector value
         $displaySelectorValue = $view == 'table' ? 2 : 1;
     }
+
+    // Check if the cards per row argument is set
+    if (isset($cardsPerRow)) {
+        // Set the cards per row value
+        $cardsPerRow = $cardsPerRow;
+    }
+
+    const MAXIMUM_CARDS_PER_ROW = 5; // Defaulting to 5, might be changed?
 ?>
 
 <div class="controls">
@@ -23,21 +31,31 @@
                 <option value="2">Table</option>
             </select>
         </div>
+        <div class="dropdown">
+            <label for="cards-per-row">Cards per row</label>
+            <select id="cards-per-row">
+                <?php for ($i = 1; $i <= MAXIMUM_CARDS_PER_ROW; $i++) : ?>
+                    <option value="<?= $i ?>"><?= $i ?></option>
+                <?php endfor; ?>
+            </select>
+        </div>
     </div>
 </div>
 
 <?php if ($view === 'grid') : ?>
-    <div class="cards">
+    <div class="cards" id="cards-container">
         <?php 
             foreach ($cards as $card) : ?>
-            <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
+
                 <div class="card">
-                    <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
-                    <div class="card-info">
-                        <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
-                    </div>
+                    <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
+                        <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
+                        <div class="card-info">
+                            <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                        </div>
+                    </a>
                 </div>
-            </a>
+
         <?php endforeach; ?>
 
         <?php if (count($cards) == 0) : ?>
@@ -113,35 +131,49 @@
 <?php endif; ?>
 
 <script>
-    // Get the display selector
-    const displaySelector = document.getElementById('display-selector');
+    // Get the display selector and cards per row selector
+    const DISPLAY_SELECTOR = document.getElementById('display-selector');
+    const CARDS_PER_ROW_SELECTOR = document.getElementById('cards-per-row');
+    const CARDS_CONTAINER = document.getElementById('cards-container');
+    let displaySelectorValue = null;
+    let cardsPerRow = null;
 
-    // Add an event listener to the display selector
-    displaySelector.addEventListener('change', (event) => {
-        // Get the value of the display selector
-        const displaySelectorValue = event.target.value;
-
-        // Convert the value to the appropriate argument
-        const viewVal = displaySelectorValue == 1 ? 'grid' : 'table';
-
-        // Get the current URL and parse the query string
-        const currentUrl = window.location.href;
-        const urlParts = currentUrl.split('?');
-        const baseUrl = urlParts[0];
-        const queryParams = new URLSearchParams(urlParts[1]);
-
-        // Set the "view" parameter to the new value
-        queryParams.set('view', viewVal);
-
-        // Construct the new URL with the updated query string
-        const newUrl = baseUrl + '?' + queryParams.toString();
-
-        // Reload the page with the new URL
-        window.location.href = newUrl;
+    // Event listener for display selector
+    DISPLAY_SELECTOR.addEventListener('change', (event) => {
+        console.log(event)
+        displaySelectorValue = event.target.value;
+        const VIEW_VAL = displaySelectorValue == 1 ? 'grid' : 'table';
+        updateUrlParameters('view', VIEW_VAL);
     });
 
-    // Set the display selector value
-    displaySelector.value = <?= $displaySelectorValue ?>;
+    // Event listener for cards per row selector
+    CARDS_PER_ROW_SELECTOR.addEventListener('change', (event) => {
+        cardsPerRow = event.target.value;
+        CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
+        updateUrlParameters('cards_per_row', cardsPerRow);
+    });
+
+    /**
+     * Update the URL parameters with the new key-value pair.
+     * 
+     * @param {string} key The key to set
+     * @param {string} value The value of the key
+     * @returns {void}
+     */
+    function updateUrlParameters(key, value) {
+        const URL = window.location.href;
+        const URL_PARTS = URL.split('?');
+        const BASE_URL = URL_PARTS[0];
+        let queryParams = new URLSearchParams(URL_PARTS[1]);
+        queryParams.set(key, value);
+        const NEW_URL = BASE_URL + '?' + queryParams.toString();
+        window.location.href = NEW_URL;
+    }
+
+    // Set the display selector and cards per row selector values
+    DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
+    CARDS_PER_ROW_SELECTOR.value = <?= $cardsPerRow ?>;
+    CARDS_CONTAINER.style.setProperty('--cards-per-row', <?= isset($_GET['cards_per_row']) ? $_GET['cards_per_row'] : 5 ?>);
 
     /**
      * Sort the table by the column index.

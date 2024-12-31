@@ -310,10 +310,9 @@ h2:hover .copy {
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     display: flex;
-    flex: 0 0 auto;
     flex-direction: column;
     margin: 1rem;
-    padding: 10px;
+    padding: 16px;
     max-width: 30rem;
     transition: 0.15s ease all;
 }
@@ -324,24 +323,23 @@ h2:hover .copy {
 }
 
 .cards {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    display: grid;
+    gap: 16px;
+    --cards-per-row: 5; /* Default value of 5, can be changed via JS */
+    grid-template-columns: repeat(var(--cards-per-row), minmax(0, 1fr));
     justify-content: center;
-    align-items: center;
-    align-content: center;
-    flex-grow: 1;
+    margin: 0 auto;
 }
 
 .cards a {
     text-decoration: none;
     color: black;
-    display: flex;
+    justify-content: center;
+    display: grid;
 }
 
 .card-image {
     width: 100%;
-    height: 20rem;
     object-fit: cover;
     border-radius: 5px;
 }
@@ -611,7 +609,6 @@ select {
 
     .cards {
         max-width: 50vw;
-        margin: 0 auto;
     }
 }
 
@@ -654,10 +651,6 @@ select {
 @media screen and (max-width: 600px) {
     .controls {
         flex-direction: column;
-    }
-
-    #card-search-controls {
-        display: none; /* Hide table / cards dropdown on mobile */
     }
 
     .controls .search-container {

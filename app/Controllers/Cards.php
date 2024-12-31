@@ -95,7 +95,9 @@ class Cards extends BaseController {
             'cards' => $results['cards'],
             'pagination' => $results['pagination'],
             'searchQuery' => $searchQuery,
-            'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid'
+            'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
+            'cardsPerRow' => $this->request->getGet('cards_per_row') ?? 5
+       
         ]);
         return view('fragments/footer');
     }
