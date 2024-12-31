@@ -359,21 +359,19 @@ h2:hover .copy {
 
 /* Card Table */
 .cards-table {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     text-align: center;
     width: 75%;
+    overflow-x: auto;
     margin-bottom: 1rem;
 }
+
 
 .pretty-table {
     border-collapse: collapse;
     width: 100%;
 }
 
-.pretty-table  th, td {
+.pretty-table th, .pretty-table td {
     text-align: left;
     padding: 8px;
 }
@@ -409,7 +407,7 @@ h2:hover .copy {
 
 .cards-table img {
     width: auto;
-    height: 5rem;
+    height: 10rem;
     object-fit: cover;
     border-radius: 5px;
 }
@@ -755,5 +753,17 @@ select {
 
     .active {
         background-color: #e4dfdf;
+    }
+
+    .cards-table {
+        width: 100%;
+    }
+
+    .pretty-table th, .pretty-table td {
+        padding: 12px 8px;
+    }
+
+    .cards-table img {
+        height: 5rem;
     }
 }
