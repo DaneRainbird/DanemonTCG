@@ -42,6 +42,46 @@
     </div>
 </div>
 
+<?php if (isset($pagination)) : ?>
+    <div class="pagination">
+        <?php 
+            if (count($cards) !== 0) {
+                $totalPages = $pagination->getTotalPages();
+                $currentPage = $pagination->getPage();
+
+                // Parse the current URL to extract the query string
+                $urlParts = parse_url($_SERVER['REQUEST_URI']);
+                parse_str($urlParts['query'], $queryParams);
+
+                // Add "first" page button
+                if ($currentPage > 3) {
+                    $queryParams['page'] = 1;
+                    $firstPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                    echo '<a class="page-button" href="' . $firstPageUrl . '">≪</a>';
+                }
+
+                // Add page buttons
+                foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
+                    $queryParams['page'] = $page;
+                    $pageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                    if ($page == $currentPage) {
+                        echo '<a class="page-button active" href="' . $pageUrl . '">' . $page .  "</a>";
+                    } else {
+                        echo '<a class="page-button" href="' . $pageUrl . '">' . $page .  "</a>";
+                    }
+                }
+
+                // Add "last" page button
+                if ($currentPage < $totalPages - 2) {
+                    $queryParams['page'] = $totalPages;
+                    $lastPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                    echo '<a class="page-button" href="' . $lastPageUrl . '">≫</a>';
+                }
+            }
+        ?>
+    </div>
+<?php endif; ?>
+
 <?php if ($view === 'grid') : ?>
     <div class="cards" id="cards-container">
         <?php 
