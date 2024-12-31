@@ -86,7 +86,6 @@
     <div class="cards" id="cards-container">
         <?php 
             foreach ($cards as $card) : ?>
-
                 <div class="card">
                     <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
                         <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
@@ -95,7 +94,6 @@
                         </div>
                     </a>
                 </div>
-
         <?php endforeach; ?>
 
         <?php if (count($cards) == 0) : ?>
