@@ -42,6 +42,7 @@
     </div>
 </div>
 
+<!-- Begin Pagination Top -->
 <?php if (isset($pagination)) : ?>
     <div class="pagination">
         <?php 
@@ -81,7 +82,9 @@
         ?>
     </div>
 <?php endif; ?>
+<!-- End Pagination Top -->
 
+<!-- Begin Grid View -->
 <?php if ($view === 'grid') : ?>
     <div class="cards" id="cards-container">
         <?php 
@@ -100,7 +103,9 @@
             <p>No cards found.</p>
         <?php endif; ?>
     </div>
+<!-- End Grid View -->
 
+<!-- Begin Table View -->
 <?php else : ?>
     <div class="cards-table container">
         <table id="card-table" class="pretty-table">
@@ -127,7 +132,9 @@
         </table>
     </div>
 <?php endif; ?>
+<!-- End Table View -->
 
+<!-- Begin Pagination Bottom -->
 <?php if (isset($pagination)) : ?>
     <div class="pagination">
         <?php 
@@ -167,29 +174,64 @@
         ?>
     </div>
 <?php endif; ?>
+<!-- End Pagination Bottom -->
+
+<!-- Begin Image Modal -->
+<div id="image-modal" class="modal">
+    <span class="close" id="modal-close">&times;</span>
+    <img class="modal-content" id="modal-image"/>
+</div>
+<!-- End Image Modal -->
 
 <script>
-    // Get the display selector and cards per row selector
+    // Constants / variables
     const DISPLAY_SELECTOR = document.getElementById('display-selector');
     const CARDS_PER_ROW_SELECTOR = document.getElementById('cards-per-row');
     const CARDS_CONTAINER = document.getElementById('cards-container');
+    const MODAL = document.getElementById('image-modal');
+    const MODAL_IMAGE = document.getElementById('modal-image');
+    const MODAL_CLOSE_BUTTON = document.getElementById('modal-close');
     let displaySelectorValue = null;
     let cardsPerRow = null;
 
-    // Event listener for display selector
-    DISPLAY_SELECTOR.addEventListener('change', (event) => {
-        console.log(event)
-        displaySelectorValue = event.target.value;
-        const VIEW_VAL = displaySelectorValue == 1 ? 'grid' : 'table';
-        updateUrlParameters('view', VIEW_VAL);
-    });
+    // Event listener for when the page is fully loaded
+    window.onload = (event) => {
+        // Event listener for image clicks in table view
+        document.querySelectorAll('.pretty-table img').forEach((image) => {
+            image.addEventListener('click', (event) => {
+                MODAL_IMAGE.src = event.target.src;
+                setTimeout(() => {
+                    MODAL.classList.add('show')
+                }, 10);
+            });
+        });
 
-    // Event listener for cards per row selector
-    CARDS_PER_ROW_SELECTOR.addEventListener('change', (event) => {
-        cardsPerRow = event.target.value;
-        CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
-        updateUrlParameters('cards_per_row', cardsPerRow);
-    });
+        // Event listener for closing the modal via the close button
+        MODAL_CLOSE_BUTTON.addEventListener('click', () => {
+            MODAL.classList.remove('show');
+        });
+
+        // Event listener for closing the modal via clicking outside the modal
+        window.addEventListener('click', (event) => {
+            if (event.target === MODAL) {
+                MODAL.classList.remove('show');
+            }
+        });
+
+        // Event listener for display selector
+        DISPLAY_SELECTOR.addEventListener('change', (event) => {
+            displaySelectorValue = event.target.value;
+            const VIEW_VAL = displaySelectorValue == 1 ? 'grid' : 'table';
+            updateUrlParameters('view', VIEW_VAL);
+        });
+
+        // Event listener for cards per row selector
+        CARDS_PER_ROW_SELECTOR.addEventListener('change', (event) => {
+            cardsPerRow = event.target.value;
+            CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
+            updateUrlParameters('cards_per_row', cardsPerRow);
+        });
+    }
 
     /**
      * Update the URL parameters with the new key-value pair.
@@ -225,7 +267,7 @@
         const headerCells = headerRow.cells;
 
         for (let i = 0; i < headerCells.length; i++) {
-            if (i !== columnIndex ) { 
+            if (i !== columnIndex) { 
                 headerCells[i].removeAttribute('data-sort');
             }
         }
