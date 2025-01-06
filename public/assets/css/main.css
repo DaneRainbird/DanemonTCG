@@ -329,6 +329,8 @@ h2:hover .copy {
     grid-template-columns: repeat(var(--cards-per-row), minmax(0, 1fr));
     justify-content: center;
     margin: 0 auto;
+    place-items: center;
+    max-width: 50vw;
 }
 
 .cards a {

@@ -95,6 +95,8 @@ class Cards extends BaseController {
             'cards' => $results['cards'],
             'pagination' => $results['pagination'],
             'searchQuery' => $searchQuery,
+            'isSearch' => true,
+            'isCollection' => false,
             'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
             'cardsPerRow' => $this->request->getGet('cards_per_row') ?? 5
        

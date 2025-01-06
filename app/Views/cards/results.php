@@ -14,167 +14,175 @@
     const MAXIMUM_CARDS_PER_ROW = 5; // Defaulting to 5, might be changed?
 ?>
 
-<div class="controls">
-    <div class="control">
-        <div class="search-container">
-            <form action="<?= base_url('cards/search') ?>" method="get">
-                <input type="text" id="value" name="value" placeholder="Search for a card!" required value="<?= htmlspecialchars($searchQuery); ?>">
-                <button type="submit" class="search-button"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
-            </form>
+<div class="container">
+    <?php if ($isCollection) : ?>
+        <h2>Collection: <?= $collectionName; ?></h2>
+    <?php endif; ?>
+    <div class="controls">
+        <?php if ($isSearch) : ?>
+            <div class="control">
+                <div class="search-container">
+                    <form action="<?= base_url('cards/search') ?>" method="get">
+                        <input type="text" id="value" name="value" placeholder="Search for a card!" required value="<?= htmlspecialchars($searchQuery); ?>">
+                        <button type="submit" class="search-button"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></button>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="control" id="card-search-controls">
+            <div class="dropdown">
+                <label for="display-selector">Display as:</label>
+                <select id="display-selector">
+                    <option value="1">Cards</option>
+                    <option value="2">Table</option>
+                </select>
+            </div>
+            <div class="dropdown">
+                <label for="cards-per-row">Cards per row</label>
+                <select id="cards-per-row">
+                    <?php for ($i = 1; $i <= MAXIMUM_CARDS_PER_ROW; $i++) : ?>
+                        <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
         </div>
     </div>
-    <div class="control" id="card-search-controls">
-        <div class="dropdown">
-            <label for="display-selector">Display as:</label>
-            <select id="display-selector">
-                <option value="1">Cards</option>
-                <option value="2">Table</option>
-            </select>
+
+    <!-- Begin Pagination Top -->
+    <?php if (isset($pagination)) : ?>
+        <div class="pagination">
+            <?php 
+                if (count($cards) !== 0) {
+                    $totalPages = $pagination->getTotalPages();
+                    $currentPage = $pagination->getPage();
+
+                    // Parse the current URL to extract the query string
+                    $urlParts = parse_url($_SERVER['REQUEST_URI']);
+                    parse_str($urlParts['query'], $queryParams);
+
+                    // Add "first" page button
+                    if ($currentPage > 3) {
+                        $queryParams['page'] = 1;
+                        $firstPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        echo '<a class="page-button" href="' . $firstPageUrl . '">≪</a>';
+                    }
+
+                    // Add page buttons
+                    foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
+                        $queryParams['page'] = $page;
+                        $pageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        if ($page == $currentPage) {
+                            echo '<a class="page-button active" href="' . $pageUrl . '">' . $page .  "</a>";
+                        } else {
+                            echo '<a class="page-button" href="' . $pageUrl . '">' . $page .  "</a>";
+                        }
+                    }
+
+                    // Add "last" page button
+                    if ($currentPage < $totalPages - 2) {
+                        $queryParams['page'] = $totalPages;
+                        $lastPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        echo '<a class="page-button" href="' . $lastPageUrl . '">≫</a>';
+                    }
+                }
+            ?>
         </div>
-        <div class="dropdown">
-            <label for="cards-per-row">Cards per row</label>
-            <select id="cards-per-row">
-                <?php for ($i = 1; $i <= MAXIMUM_CARDS_PER_ROW; $i++) : ?>
-                    <option value="<?= $i ?>"><?= $i ?></option>
-                <?php endfor; ?>
-            </select>
+    <?php endif; ?>
+    <!-- End Pagination Top -->
+
+    <!-- Begin Grid View -->
+    <?php if ($view === 'grid') : ?>
+        <div class="cards" id="cards-container">
+            <?php 
+                foreach ($cards as $card) : ?>
+                    <div class="card">
+                        <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
+                            <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
+                            <div class="card-info">
+                                <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                            </div>
+                        </a>
+                    </div>
+            <?php endforeach; ?>
+
+            <?php if (count($cards) == 0) : ?>
+                <p>No cards found.</p>
+            <?php endif; ?>
         </div>
-    </div>
+    <!-- End Grid View -->
+
+    <!-- Begin Table View -->
+    <?php else : ?>
+        <div class="cards-table container">
+            <table id="card-table" class="pretty-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th onclick="sortTable(1)">Name</th>
+                        <th onclick="sortTable(2)">Set</th>
+                        <th onclick="sortTable(3)">Number</th>
+                        <th>More Details?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($cards as $card) : ?>
+                        <tr>
+                            <td><img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>"></td>
+                            <td><?= $card['name'] ?></td>
+                            <td><?= $card['set']['name'] ?></td>
+                            <td><?= $card['number'] . '/' . $card['set']['total'] ?></td>
+                            <td><a class="view-button" href="/cards/details/<?= $card['id']; ?>" target="_blank">View Card</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+    <!-- End Table View -->
+
+    <!-- Begin Pagination Bottom -->
+    <?php if (isset($pagination)) : ?>
+        <div class="pagination">
+            <?php 
+                if (count($cards) !== 0) {
+                    $totalPages = $pagination->getTotalPages();
+                    $currentPage = $pagination->getPage();
+
+                    // Parse the current URL to extract the query string
+                    $urlParts = parse_url($_SERVER['REQUEST_URI']);
+                    parse_str($urlParts['query'], $queryParams);
+
+                    // Add "first" page button
+                    if ($currentPage > 3) {
+                        $queryParams['page'] = 1;
+                        $firstPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        echo '<a class="page-button" href="' . $firstPageUrl . '">≪</a>';
+                    }
+
+                    // Add page buttons
+                    foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
+                        $queryParams['page'] = $page;
+                        $pageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        if ($page == $currentPage) {
+                            echo '<a class="page-button active" href="' . $pageUrl . '">' . $page .  "</a>";
+                        } else {
+                            echo '<a class="page-button" href="' . $pageUrl . '">' . $page .  "</a>";
+                        }
+                    }
+
+                    // Add "last" page button
+                    if ($currentPage < $totalPages - 2) {
+                        $queryParams['page'] = $totalPages;
+                        $lastPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
+                        echo '<a class="page-button" href="' . $lastPageUrl . '">≫</a>';
+                    }
+                }
+            ?>
+        </div>
+    <?php endif; ?>
+    <!-- End Pagination Bottom -->
 </div>
 
-<!-- Begin Pagination Top -->
-<?php if (isset($pagination)) : ?>
-    <div class="pagination">
-        <?php 
-            if (count($cards) !== 0) {
-                $totalPages = $pagination->getTotalPages();
-                $currentPage = $pagination->getPage();
-
-                // Parse the current URL to extract the query string
-                $urlParts = parse_url($_SERVER['REQUEST_URI']);
-                parse_str($urlParts['query'], $queryParams);
-
-                // Add "first" page button
-                if ($currentPage > 3) {
-                    $queryParams['page'] = 1;
-                    $firstPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    echo '<a class="page-button" href="' . $firstPageUrl . '">≪</a>';
-                }
-
-                // Add page buttons
-                foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
-                    $queryParams['page'] = $page;
-                    $pageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    if ($page == $currentPage) {
-                        echo '<a class="page-button active" href="' . $pageUrl . '">' . $page .  "</a>";
-                    } else {
-                        echo '<a class="page-button" href="' . $pageUrl . '">' . $page .  "</a>";
-                    }
-                }
-
-                // Add "last" page button
-                if ($currentPage < $totalPages - 2) {
-                    $queryParams['page'] = $totalPages;
-                    $lastPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    echo '<a class="page-button" href="' . $lastPageUrl . '">≫</a>';
-                }
-            }
-        ?>
-    </div>
-<?php endif; ?>
-<!-- End Pagination Top -->
-
-<!-- Begin Grid View -->
-<?php if ($view === 'grid') : ?>
-    <div class="cards" id="cards-container">
-        <?php 
-            foreach ($cards as $card) : ?>
-                <div class="card">
-                    <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
-                        <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
-                        <div class="card-info">
-                            <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
-                        </div>
-                    </a>
-                </div>
-        <?php endforeach; ?>
-
-        <?php if (count($cards) == 0) : ?>
-            <p>No cards found.</p>
-        <?php endif; ?>
-    </div>
-<!-- End Grid View -->
-
-<!-- Begin Table View -->
-<?php else : ?>
-    <div class="cards-table container">
-        <table id="card-table" class="pretty-table">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th onclick="sortTable(1)">Name</th>
-                    <th onclick="sortTable(2)">Set</th>
-                    <th onclick="sortTable(3)">Number</th>
-                    <th>More Details?</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($cards as $card) : ?>
-                    <tr>
-                        <td><img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>"></td>
-                        <td><?= $card['name'] ?></td>
-                        <td><?= $card['set']['name'] ?></td>
-                        <td><?= $card['number'] . '/' . $card['set']['total'] ?></td>
-                        <td><a class="view-button" href="/cards/details/<?= $card['id']; ?>" target="_blank">View Card</a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
-<!-- End Table View -->
-
-<!-- Begin Pagination Bottom -->
-<?php if (isset($pagination)) : ?>
-    <div class="pagination">
-        <?php 
-            if (count($cards) !== 0) {
-                $totalPages = $pagination->getTotalPages();
-                $currentPage = $pagination->getPage();
-
-                // Parse the current URL to extract the query string
-                $urlParts = parse_url($_SERVER['REQUEST_URI']);
-                parse_str($urlParts['query'], $queryParams);
-
-                // Add "first" page button
-                if ($currentPage > 3) {
-                    $queryParams['page'] = 1;
-                    $firstPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    echo '<a class="page-button" href="' . $firstPageUrl . '">≪</a>';
-                }
-
-                // Add page buttons
-                foreach (range(max(1, $currentPage - 2), min($totalPages, $currentPage + 2)) as $page) {
-                    $queryParams['page'] = $page;
-                    $pageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    if ($page == $currentPage) {
-                        echo '<a class="page-button active" href="' . $pageUrl . '">' . $page .  "</a>";
-                    } else {
-                        echo '<a class="page-button" href="' . $pageUrl . '">' . $page .  "</a>";
-                    }
-                }
-
-                // Add "last" page button
-                if ($currentPage < $totalPages - 2) {
-                    $queryParams['page'] = $totalPages;
-                    $lastPageUrl = $urlParts['path'] . '?' . http_build_query($queryParams);
-                    echo '<a class="page-button" href="' . $lastPageUrl . '">≫</a>';
-                }
-            }
-        ?>
-    </div>
-<?php endif; ?>
-<!-- End Pagination Bottom -->
 
 <!-- Begin Image Modal -->
 <div id="image-modal" class="modal">

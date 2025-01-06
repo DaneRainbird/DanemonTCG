@@ -59,10 +59,15 @@ class Collections extends BaseController {
             ]
         ]);
         echo view('fragments/header');
-        echo view('collections/results', [
+        echo view('cards/results', [
             'cards' => $cards,
             'collectionId' => $collectionId,
-            'collectionName' => $collectionName
+            'collectionName' => $collectionName,
+            'searchQuery' => '',
+            'isSearch' => false,
+            'isCollection' => true,
+            'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
+            'cardsPerRow' => $this->request->getGet('cards_per_row') ?? 5
         ]);
         return view('fragments/footer');
     }
