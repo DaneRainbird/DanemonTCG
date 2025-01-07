@@ -230,7 +230,7 @@
         DISPLAY_SELECTOR.addEventListener('change', (event) => {
             displaySelectorValue = event.target.value;
             const VIEW_VAL = displaySelectorValue == 1 ? 'grid' : 'table';
-            updateUrlParameters('view', VIEW_VAL);
+            updateUrlParameters('view', VIEW_VAL, true);
         });
 
         // Event listener for cards per row selector
@@ -246,16 +246,21 @@
      * 
      * @param {string} key The key to set
      * @param {string} value The value of the key
+     * @param {boolean} reload Whether or not to reload the page
      * @returns {void}
      */
-    function updateUrlParameters(key, value) {
+    function updateUrlParameters(key, value, reload = false) {
         const URL = window.location.href;
         const URL_PARTS = URL.split('?');
         const BASE_URL = URL_PARTS[0];
         let queryParams = new URLSearchParams(URL_PARTS[1]);
         queryParams.set(key, value);
         const NEW_URL = BASE_URL + '?' + queryParams.toString();
-        history.pushState(null, '', NEW_URL);
+        if (reload) {
+            window.location.href = NEW_URL;
+        } else {
+            history.pushState(null, '', NEW_URL);
+        }
     }
 
     // Set the display selector and cards per row selector values
