@@ -100,6 +100,9 @@
                             <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
                             <div class="card-info">
                                 <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                                <?php if ($isCollection) : ?>
+                                    <a class="delete-button" data-card-id="<?= $card['id']; ?>" target="_blank">Remove from Collection?</a>
+                                <?php endif; ?>
                             </div>
                         </a>
                     </div>
@@ -199,6 +202,7 @@
     const MODAL = document.getElementById('image-modal');
     const MODAL_IMAGE = document.getElementById('modal-image');
     const MODAL_CLOSE_BUTTON = document.getElementById('modal-close');
+    const DELETE_BUTTONS = document.querySelectorAll('.delete-button');
     let displaySelectorValue = null;
     let cardsPerRow = null;
 
@@ -246,6 +250,31 @@
             // Update the URL params, but do not reload
             updateUrlParameters('cards_per_row', cardsPerRow);
         });
+
+        <?php if ($isCollection) : ?>
+            // Event listeners for the delete buttonss
+            DELETE_BUTTONS.forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    var xhr = new XMLHttpRequest();
+                    var url = "/collections/removeCardFromCollection"; 
+                    var formData = new FormData();
+                    formData.append("collection_id", "<?= $collectionId ?>");
+                    formData.append("card_id", button.getAttribute('data-card-id'));
+                    formData.append("user_id", "<?= session()->get('uid') ?>");
+                    xhr.open("POST", url);
+                    xhr.send(formData);
+
+                    xhr.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            createNotification("Card successfully deleted from the collection!", "is-success");
+                            button.parentElement.parentElement.remove();
+                        } else if (this.readyState == 4 && this.status == 400) {
+                            createNotification("Card could not be removed from the collection: " + JSON.parse(this.responseText).message, "is-danger");
+                        }  
+                    }
+                });
+            });
+        <?php endif; ?>
     }
 
     /**
