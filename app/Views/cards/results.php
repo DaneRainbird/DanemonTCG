@@ -255,7 +255,7 @@
         let queryParams = new URLSearchParams(URL_PARTS[1]);
         queryParams.set(key, value);
         const NEW_URL = BASE_URL + '?' + queryParams.toString();
-        window.location.href = NEW_URL;
+        history.pushState(null, '', NEW_URL);
     }
 
     // Set the display selector and cards per row selector values
