@@ -230,6 +230,8 @@
         DISPLAY_SELECTOR.addEventListener('change', (event) => {
             displaySelectorValue = event.target.value;
             const VIEW_VAL = displaySelectorValue == 1 ? 'grid' : 'table';
+
+            // Update the URL params and reload the page
             updateUrlParameters('view', VIEW_VAL, true);
         });
 
@@ -237,6 +239,11 @@
         CARDS_PER_ROW_SELECTOR.addEventListener('change', (event) => {
             cardsPerRow = event.target.value;
             CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
+
+            // Update the max width of the cards
+            updateCardMaxWidth();
+
+            // Update the URL params, but do not reload
             updateUrlParameters('cards_per_row', cardsPerRow);
         });
     }
@@ -261,6 +268,23 @@
         } else {
             history.pushState(null, '', NEW_URL);
         }
+    }
+
+    /**
+     * Update the max width of the cards based on the number of cards per row.
+     * 
+     * @returns {void}
+     */
+    function updateCardMaxWidth() {
+        let maxWidth;
+
+        if (CARDS_PER_ROW_SELECTOR.value == 1 || CARDS_PER_ROW_SELECTOR.value == 5) {
+            maxWidth = 100;
+        } else {
+            maxWidth = 100 - (CARDS_PER_ROW_SELECTOR.value * 10);
+        }
+
+        CARDS_CONTAINER.style.setProperty('--max-width', maxWidth + 'vw');
     }
 
     // Set the display selector and cards per row selector values

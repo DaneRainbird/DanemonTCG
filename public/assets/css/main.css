@@ -326,11 +326,12 @@ h2:hover .copy {
     display: grid;
     gap: 16px;
     --cards-per-row: 5; /* Default value of 5, can be changed via JS */
+    --max-width: 80vw; /* Default value of 80vw, can be changed via JS */
     grid-template-columns: repeat(var(--cards-per-row), minmax(0, 1fr));
     justify-content: center;
     margin: 0 auto;
     place-items: center;
-    max-width: 50vw;
+    max-width: var(--max-width);
 }
 
 .cards a {
