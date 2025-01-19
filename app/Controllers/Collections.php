@@ -51,6 +51,16 @@ class Collections extends BaseController {
         // Get the collection name
         $collectionName = $this->db->getCollectionName($collectionId);
 
+        // See how many cards are in the collection
+        $collectionCardCount = count($cards);
+
+        // If the number of cards is <= 5, we want to change the cardsPerRow value automatically (unless overruled by an existing URL param)
+        if ($collectionCardCount <= 5 && !$this->request->getGet('cards_per_row')) {
+            $cardsPerRow = $collectionCardCount;
+        } else {
+            $cardsPerRow = $this->request->getGet('cards_per_row') ?? 5;
+        }
+
         // Render the card search results view
         echo view('fragments/html_head', [
             'title' => $collectionName,
@@ -67,7 +77,7 @@ class Collections extends BaseController {
             'isSearch' => false,
             'isCollection' => true,
             'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
-            'cardsPerRow' => $this->request->getGet('cards_per_row') ?? 5
+            'cardsPerRow' => $cardsPerRow
         ]);
         return view('fragments/footer');
     }
