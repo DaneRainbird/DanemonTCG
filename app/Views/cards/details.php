@@ -45,13 +45,18 @@
                 <th>Market</th>
             </thead>
             <tbody>
-                <td title="Last updated at <?php echo $card['tcgplayer']['updatedAt'] ?>" ><?php echo anchor($card['tcgplayer']['url'], "TCGPlayer", ['target' => '_blank', 'class' => 'text-underline']) ?></td>
-                <?php if (isset($card['tcgplayer']['prices']['normal'])) { ?>
-                    <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['low']) ? number_format($card['tcgplayer']['prices']['normal']['low'], 2, ".", ",") : "N/A"); ?></td>
-                    <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['mid']) ? number_format($card['tcgplayer']['prices']['normal']['mid'], 2, ".", ",") : "N/A"); ?></td>
-                    <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['high']) ? number_format($card['tcgplayer']['prices']['normal']['high'], 2, ".", ",") : "N/A"); ?></td>
-                    <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['market']) ? number_format($card['tcgplayer']['prices']['normal']['market'], 2, ".", ",") : "N/A"); ?></td>
+                <?php if (isset($card['tcgplayer'])) { ?>
+                    <td title="Last updated at <?php echo $card['tcgplayer']['updatedAt'] ?>" ><?php echo anchor($card['tcgplayer']['url'], "TCGPlayer", ['target' => '_blank', 'class' => 'text-underline']) ?></td>
+                    <?php if (isset($card['tcgplayer']['prices']['normal'])) { ?>
+                        <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['low']) ? number_format($card['tcgplayer']['prices']['normal']['low'], 2, ".", ",") : "N/A"); ?></td>
+                        <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['mid']) ? number_format($card['tcgplayer']['prices']['normal']['mid'], 2, ".", ",") : "N/A"); ?></td>
+                        <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['high']) ? number_format($card['tcgplayer']['prices']['normal']['high'], 2, ".", ",") : "N/A"); ?></td>
+                        <td><?= "$" . (isset($card['tcgplayer']['prices']['normal']['market']) ? number_format($card['tcgplayer']['prices']['normal']['market'], 2, ".", ",") : "N/A"); ?></td>
+                    <?php } else { ?>
+                        <td colspan="4" style="text-align: center">N/A</td>
+                    <?php } ?>
                 <?php } else { ?>
+                    <td>TCGPlayer</td>
                     <td colspan="4" style="text-align: center">N/A</td>
                 <?php } ?>
             </tbody>
