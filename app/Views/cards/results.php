@@ -99,7 +99,7 @@
                         <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
                             <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
                             <div class="card-info">
-                                <p><?= "<strong>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                                <p class="card-info-text"><?= "<strong class='card-set-name'>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
                                 <?php if ($isCollection) : ?>
                                     <a class="delete-button" data-card-id="<?= $card['id']; ?>" target="_blank">Remove from Collection?</a>
                                 <?php endif; ?>

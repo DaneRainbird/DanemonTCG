@@ -588,6 +588,15 @@ select {
     color: #007a5f;
 }
 
+.card-info-text {
+    height: 5rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 /* Sets */
 .sets {
     display: flex;
