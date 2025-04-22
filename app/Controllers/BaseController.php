@@ -57,4 +57,34 @@ abstract class BaseController extends Controller
         $this->session = \Config\Services::session();
         $this->db = new DanemonDatabaseService();
     }
+
+    /**
+     * Helper method to get the user model
+     * 
+     * @return \App\Models\UserModel
+     */
+    protected function userModel()
+    {
+        return model(\App\Models\UserModel::class);
+    }
+
+    /**
+     * Helper method to get the collection model
+     * 
+     * @return \App\Models\CollectionModel
+     */
+    protected function collectionModel()
+    {
+        return model(\App\Models\CollectionModel::class);
+    }
+
+    /**
+     * Helper method to get the collection card model
+     * 
+     * @return \App\Models\CollectionCardModel
+     */
+    protected function collectionCardModel()
+    {
+        return model(\App\Models\CollectionCardModel::class);
+    }
 }
