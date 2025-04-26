@@ -7,11 +7,11 @@ use CodeIgniter\Model;
 class CollectionCardModel extends Model
 {
     protected $table = 'collection_cards';
-    protected $primaryKey = ['collection_id', 'card_id'];
+    protected $primaryKey = 'id'; // Note - collection_cards table has a surrogate primary key, as CI4 is not able to use composite keys
     protected $allowedFields = ['collection_id', 'card_id'];
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
 
     /**
      * Gets all cards in a collection
