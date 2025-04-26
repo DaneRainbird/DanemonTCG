@@ -41,10 +41,10 @@
             <tbody>
                 <?php foreach ($collections as $collection) : ?>
                     <tr>
-                        <td><?= $collection->id ?></td>
-                        <td><?= $collection->name ?></td>
-                        <td><?= $collection->username ?></td>
-                        <td><a class="fancy-link" href="/collections/view/<?= $collection->id ?>">View</a></td>
+                        <td><?= $collection['id'] ?></td>
+                        <td><?= $collection['name'] ?></td>
+                        <td><?= $collection['username'] ?></td>
+                        <td><a class="fancy-link" href="/collections/view/<?= $collection['id'] ?>">View</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\API\ResponseTrait;
 use App\Libraries\PokemonTCGService;
 
 class Collections extends BaseController {
+
+    use ResponseTrait;
 
     /**
      * The PokemonTCGService instance.
@@ -34,22 +37,22 @@ class Collections extends BaseController {
         }
 
         // If the user is not an admin or does not own the collection, redirect to the home page
-        if ($this->session->get('isAdmin') === "false" && !$this->db->userOwnsCollection($this->session->get('uid'), $collectionId)) {
+        if ($this->session->get('isAdmin') === "false" && !$this->collectionModel()->userOwnsCollection($this->session->get('uid'), $collectionId)) {
             session()->setFlashdata('error', 'You do not have permission to view this collection!');
             return redirect()->to('/');
         }
 
         // Get the cards in the collection
-        $results = $this->db->getCardsInCollection($collectionId);
+        $results = $this->collectionCardModel()->getCardsInCollection($collectionId);
 
         // Loop through each card and get it's details
         $cards = [];
         foreach ($results as $result) {
-            array_push($cards, $this->pokemonTCGService->getCard($result->card_id, 'id,name,number,images,set'));
+            array_push($cards, $this->pokemonTCGService->getCard($result['card_id'], 'id,name,number,images,set'));
         }
 
         // Get the collection name
-        $collectionName = $this->db->getCollectionName($collectionId);
+        $collectionName = $this->collectionModel()->getCollectionName($collectionId);
 
         // See how many cards are in the collection
         $collectionCardCount = count($cards);
@@ -90,12 +93,12 @@ class Collections extends BaseController {
         }
 
         // Get all of the cards in all of the user's collections
-        $results = $this->db->getAllCardsInCollections($this->session->get('uid'));
+        $results = $this->collectionCardModel()->getAllCardsInCollections($this->session->get('uid'));
 
         // Loop through each card and get it's details
         $cards = [];
         foreach ($results as $result) {
-            array_push($cards, $this->pokemonTCGService->getCard($result->card_id, 'id,name,number,images,set'));
+            array_push($cards, $this->pokemonTCGService->getCard($result['card_id'], 'id,name,number,images,set'));
         }
 
         // Render the card search results view
@@ -124,19 +127,27 @@ class Collections extends BaseController {
 
         // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
-            $response = array("status" => "error", "message" => "User not authenticated");
-            return json_encode($response);
+            return $this->respond(["status" => "error", "message" => "User not authenticated"], 401);
         }
 
-        // Create the collection
-        if (!$this->db->createCollection($collectionName, $userId)) {
-            $response = array("status" => "error", "message" => "Failed to create collection. Try again later!");
-            return json_encode($response);
-        }
+        try {
+            // Create the collection
+            $success = $this->collectionModel()->createCollection($collectionName, $userId);
+            
+            if (!$success) {
+                return $this->respond(["status" => "error", "message" => "Failed to create collection. Try again later!"], 500);
+            }
 
-        // Return a success message
-        $response = array("status" => "success", "message" => "Collection created!", 'id' => $this->db->getInsertID());
-        return json_encode($response);
+            // Return a success message
+            return $this->respond([
+                "status" => "success", 
+                "message" => "Collection created!", 
+                'id' => $this->collectionModel()->getInsertID()
+            ]);
+            
+        } catch (\Exception $e) {
+            return $this->respond(["status" => "error", "message" => $e->getMessage()], 500);
+        }
         
     }
 
@@ -151,35 +162,33 @@ class Collections extends BaseController {
 
         // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
-            $response = array("status" => "error", "message" => "User not authenticated");
-            $this->response->setStatusCode(401);
-            return json_encode($response);
+            return $this->respond(["status" => "error", "message" => "User not authenticated"], 401);
         }
 
         // Ensure that the user owns the collection
-        if (!$this->db->userOwnsCollection($userId, $collectionId)) {
-            $response = array("status" => "error", "message" => "User does not own the requested collection!");
-            $this->response->setStatusCode(401);
-            return json_encode($response);
+        if (!$this->collectionModel()->userOwnsCollection($userId, $collectionId)) {
+            return $this->respond(["status" => "error", "message" => "User does not own the requested collection!"], 401);
         }
 
         // Ensure that the card is not already in the collection
-        if ($this->db->cardInCollection($cardId, $collectionId)) {
-            $response = array("status" => "error", "message" => "Card already in collection!");
-            $this->response->setStatusCode(400);
-            return json_encode($response);
+        if ($this->collectionCardModel()->cardInCollection($cardId, $collectionId)) {
+            return $this->respond(["status" => "error", "message" => "Card already in collection!"], 400);
         }
 
-        // Add the card to the collection
-        if (!$this->db->addCardToCollection($cardId, $collectionId)) {
-            $response = array("status" => "error", "message" => "Failed to add card to collection. Try again later!");
-            $this->response->setStatusCode(500);
-            return json_encode($response);
+        try {
+            // Add the card to the collection
+            $success = $this->collectionCardModel()->addCardToCollection($cardId, $collectionId);
+            
+            if (!$success) {
+                return $this->respond(["status" => "error", "message" => "Failed to add card to collection. Try again later!"], 500);
+            }
+            
+            // Return a success message
+            return $this->respond(["status" => "success", "message" => "Card added to collection!"]);
+            
+        } catch (\Exception $e) {
+            return $this->respond(["status" => "error", "message" => $e->getMessage()], 500);
         }
-        
-        // Return a success message
-        $response = array("status" => "success", "message" => "Card added to collection!");
-        return json_encode($response);
 
     }
 
@@ -192,61 +201,54 @@ class Collections extends BaseController {
         $collectionId = $this->request->getPost('collection_id');
         $userId = $this->request->getPost('user_id');
 
-        // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
+                // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
-            $response = array("status" => "error", "message" => "User not authenticated");
-            $this->response->setStatusCode(401);
-            return json_encode($response);
+            return $this->respond(["status" => "error", "message" => "User not authenticated"], 401);
         }
 
-        // If the collection-id is 'user-all', then the user is trying to remove a card from all of their collections
-        if ($collectionId == 'user-all') {
-            // Get all of the user's collections
-            $collections = $this->db->getUserCollections($userId);
+        try {
+            // If the collection-id is 'user-all', then the user is trying to remove a card from all of their collections
+            if ($collectionId == 'user-all') {
+                // Get all of the user's collections
+                $collections = $this->collectionModel()->getUserCollections($userId);
 
-            // Loop through each collection and remove the card from it
-            foreach ($collections as $collection) {
-                // Ensure that the card is in the collection
-                if ($this->db->cardInCollection($cardId, $collection->id)) {
-                    // If it is, remove it
-                    if (!$this->db->removeCardFromCollection($cardId, $collection->id)) {
-                        $response = array("status" => "error", "message" => "Failed to remove card from collection. Try again later!");
-                        $this->response->setStatusCode(500);
-                        return json_encode($response);
+                // Loop through each collection and remove the card from it
+                foreach ($collections as $collection) {
+                    // Ensure that the card is in the collection
+                    if ($this->collectionCardModel()->cardInCollection($cardId, $collection['id'])) {
+                        // If it is, remove it
+                        if (!$this->collectionCardModel()->removeCardFromCollection($cardId, $collection['id'])) {
+                            return $this->respond(["status" => "error", "message" => "Failed to remove card from collection. Try again later!"], 500);
+                        }
                     }
+                }
+
+                // Return a success message
+                return $this->respond(["status" => "success", "message" => "Card removed from all collections!"]);
+
+            } else {
+                // Ensure that the user owns the collection
+                if (!$this->collectionModel()->userOwnsCollection($userId, $collectionId)) {
+                    return $this->respond(["status" => "error", "message" => "User does not own the requested collection!"], 401);
+                }
+
+                // Ensure that the card is in the collection
+                if (!$this->collectionCardModel()->cardInCollection($cardId, $collectionId)) {
+                    return $this->respond(["status" => "error", "message" => "Card not in collection!"], 400);
+                }
+
+                // Remove the card from the collection
+                if (!$this->collectionCardModel()->removeCardFromCollection($cardId, $collectionId)) {
+                    return $this->respond(["status" => "error", "message" => "Failed to remove card from collection. Try again later!"], 500);
                 }
             }
 
             // Return a success message
-            $response = array("status" => "success", "message" => "Card removed from all collections!");
-            return json_encode($response);
-
-        } else {
-            // Ensure that the user owns the collection
-            if (!$this->db->userOwnsCollection($userId, $collectionId)) {
-                $response = array("status" => "error", "message" => "User does not own the requested collection!");
-                $this->response->setStatusCode(401);
-                return json_encode($response);
-            }
-
-            // Ensure that the card is in the collection
-            if (!$this->db->cardInCollection($cardId, $collectionId)) {
-                $response = array("status" => "error", "message" => "Card not in collection!");
-                $this->response->setStatusCode(400);
-                return json_encode($response);
-            }
-
-            // Remove the card from the collection
-            if (!$this->db->removeCardFromCollection($cardId, $collectionId)) {
-                $response = array("status" => "error", "message" => "Failed to remove card from collection. Try again later!");
-                $this->response->setStatusCode(500);
-                return json_encode($response);
-            }
+            return $this->respond(["status" => "success", "message" => "Card removed from collection!"]);
+            
+        } catch (\Exception $e) {
+            return $this->respond(["status" => "error", "message" => $e->getMessage()], 500);
         }
-
-        // Return a success message
-        $response = array("status" => "success", "message" => "Card removed from collection!");
-        return json_encode($response);
     }
 
 

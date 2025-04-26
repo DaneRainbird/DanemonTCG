@@ -76,7 +76,7 @@
                     <label for="collection">Collection:</label>
                     <select name="collection" id="collection">
                         <?php foreach ($collections as $collection) : ?>
-                            <option value="<?= $collection->id ?>"><?= $collection->name ?></option>
+                            <option value="<?= $collection['id'] ?>"><?= $collection['name'] ?></option>
                         <?php endforeach; ?>
                         <option value="__new__">Create new collection!</option>
                     </select>
