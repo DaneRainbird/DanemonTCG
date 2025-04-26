@@ -33,7 +33,7 @@ class UserModel extends Model
         $data = [
             'okta_uid' => $uid,
             'email' => $email,
-            'role' => 0 // 0 = user, 1 = admin
+            'role' => 0 // 0 = user, 1 = admin, defaulting to user.
         ];
 
         return $this->insert($data);
