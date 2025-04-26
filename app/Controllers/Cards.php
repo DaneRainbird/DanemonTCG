@@ -78,6 +78,21 @@ class Cards extends BaseController {
         
         // Get the cards and pagination data
         $results = $this->pokemonTCGService->search($searchQuery, $page, $pageSize);
+
+        // Get number of cards in the results, and determine what the cards_per_row value should be
+        $numResults = count($results['cards']);
+        $numResultsToDisplay = 1;
+        
+        // If the cards_per_row value is not set
+        if (!$this->request->getGet('cards_per_row')) {
+            if ($numResults <= 5 && $numResults > 0) {
+                $numResultsToDisplay = $numResults;
+            } else {
+                $numResultsToDisplay = 5;
+            }
+        } else {
+            $numResultsToDisplay = $this->request->getGet('cards_per_row');
+        }
         
         // Render the view
         echo view('fragments/html_head', [
@@ -98,7 +113,7 @@ class Cards extends BaseController {
             'isSearch' => true,
             'isCollection' => false,
             'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
-            'cardsPerRow' => $this->request->getGet('cards_per_row') ?? 5
+            'cardsPerRow' => $numResultsToDisplay
        
         ]);
         return view('fragments/footer');

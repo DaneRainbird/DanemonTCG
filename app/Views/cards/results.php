@@ -1,15 +1,8 @@
 <?php 
-    // Check if the view argument is set
-    if (isset($view)) {
-        // Set the display selector value
-        $displaySelectorValue = $view == 'table' ? 2 : 1;
-    }
-
-    // Check if the cards per row argument is set
-    if (isset($cardsPerRow)) {
-        // Set the cards per row value
-        $cardsPerRow = $cardsPerRow;
-    }
+    // Default values
+    $view = isset($view) ? $view : 'grid';
+    $displaySelectorValue = $view == 'table' ? 2 : 1;
+    $cardsPerRow = isset($cardsPerRow) ? $cardsPerRow : 5;
 
     const MAXIMUM_CARDS_PER_ROW = 5; // Defaulting to 5, might be changed?
 ?>
@@ -208,6 +201,14 @@
 
     // Event listener for when the page is fully loaded
     window.onload = (event) => {
+        // Initialize values
+        DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
+        CARDS_PER_ROW_SELECTOR.value = <?= $cardsPerRow ?>;
+
+        // Apply card layout based on initial values
+        CARDS_CONTAINER.style.setProperty('--cards-per-row', <?= $cardsPerRow ?>);
+        updateCardMaxWidth();
+
         // Event listener for image clicks in table view
         document.querySelectorAll('.pretty-table img').forEach((image) => {
             image.addEventListener('click', (event) => {
