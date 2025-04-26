@@ -115,7 +115,7 @@ class Cards extends BaseController {
 
         // Get user collection data if the user is logged in
         if ($this->session->get('uid')) {
-            $userCollections = $this->db->getUserCollections($this->session->get('uid'), $id);
+            $userCollections = $this->collectionModel()->getUserCollections($this->session->get('uid'), $id);
         } else {
             $userCollections = [];
         }

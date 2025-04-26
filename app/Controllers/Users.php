@@ -91,13 +91,13 @@ class Users extends BaseController {
         session()->set('username', $result['username']);
         session()->set('id_token', $result['id_token']);
         session()->set('uid', $result['sub']);
-        session()->set('isAdmin', $this->db->isAdmin($result['sub']) ? 'true' : 'false');
+        session()->set('isAdmin', $this->userModel()->isAdmin($result['sub']) ? 'true' : 'false');
         session()->setFlashdata('success', 'You have successfully logged in!');
 
         // Create user in database if they don't already exist
-        if (!$this->db->doesUserExist($result['sub'])) {
+        if (!$this->userModel()->doesUserExist($result['sub'])) {
             try {
-                $this->db->createUser($result['sub'], $result['username']);
+                $this->userModel()->createUser($result['sub'], $result['username']);
             } catch (Exception $e) {
                 // If the user creation fails, then log the error and redirect to an error page
                 return view('errors/auth', [
@@ -167,7 +167,7 @@ class Users extends BaseController {
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),
-                'collections' => session()->get('isAdmin') === "true" ? $this->db->getAllCollections() : $this->db->getUserCollections(session()->get('uid'))
+                'collections' => session()->get('isAdmin') === "true" ? $this->collectionModel()->getAllCollections() : $this->userModel()->getUserCollections(session()->get('uid'))
             ]);
             return view('fragments/footer');
         }
