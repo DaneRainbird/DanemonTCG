@@ -1,7 +1,9 @@
+<?php $commit = getGitCommitLink(); ?>
+
 <footer class="footer">
     <div class="container">
-        <p>Copyright &copy; <a href="https://danerainbird.me/" target="_blank">Dane Rainbird</a> 2023</p>
-        <p>Data by the <a href="https://pokemontcg.io" target="_blank">Pokémon TCG API</a></p>
+        <p>Copyright &copy; <a href="https://danerainbird.me/" target="_blank">Dane Rainbird</a> 2025</p>
+        <p>Data by the <a href="https://pokemontcg.io" target="_blank">Pokémon TCG API</a>. Running Danemon version <a href="<?= $commit['url'] ?>" target="_blank"><?= $commit['short_hash'] ?></a>.</p>
     </div>
 </footer>
 
