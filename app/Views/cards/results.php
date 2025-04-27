@@ -211,9 +211,11 @@
             }
         } 
 
-        // Apply card layout based on initial values
-        CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
-        updateCardMaxWidth();
+        <?php if ($view == 'grid') : ?>
+            // Apply card layout based on initial values
+            CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
+            updateCardMaxWidth();
+        <?php endif; ?>
 
         // Update display values in the selectors
         DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
