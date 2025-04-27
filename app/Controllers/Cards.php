@@ -90,8 +90,10 @@ class Cards extends BaseController {
             } else {
                 $numResultsToDisplay = 5;
             }
+            $userSetCardsPerRow = false;
         } else {
             $numResultsToDisplay = $this->request->getGet('cards_per_row');
+            $userSetCardsPerRow = true;
         }
         
         // Render the view
@@ -113,7 +115,8 @@ class Cards extends BaseController {
             'isSearch' => true,
             'isCollection' => false,
             'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
-            'cardsPerRow' => $numResultsToDisplay
+            'cardsPerRow' => $numResultsToDisplay,
+            'userSetCardsPerRow' => $userSetCardsPerRow
        
         ]);
         return view('fragments/footer');

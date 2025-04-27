@@ -317,6 +317,12 @@ h2:hover .copy {
     transition: 0.15s ease all;
 }
 
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .card:hover, .set:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     scale: 1.05;
@@ -332,6 +338,7 @@ h2:hover .copy {
     margin: 0 auto;
     place-items: center;
     max-width: var(--max-width);
+    align-items: stretch;
 }
 
 .cards a {
@@ -341,10 +348,18 @@ h2:hover .copy {
     display: grid;
 }
 
+.card-image-wrapper {
+    width: 100%;
+    aspect-ratio: 2/3;
+    overflow: hidden;
+    border-radius: 5px;
+    background-color: #f0f0f0; /* fallback if image fails to load */
+}
+
 .card-image {
     width: 100%;
-    object-fit: cover;
-    border-radius: 5px;
+    height: 100%;
+    object-fit: fill;
 }
 
 .card-info, .set-info {

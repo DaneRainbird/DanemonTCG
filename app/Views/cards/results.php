@@ -1,10 +1,8 @@
 <?php 
-    // Default values
+    const MAXIMUM_CARDS_PER_ROW = 5; // Defaulting to 5, might be changed?
     $view = isset($view) ? $view : 'grid';
     $displaySelectorValue = $view == 'table' ? 2 : 1;
-    $cardsPerRow = isset($cardsPerRow) ? $cardsPerRow : 5;
-
-    const MAXIMUM_CARDS_PER_ROW = 5; // Defaulting to 5, might be changed?
+    $cardsPerRow = isset($cardsPerRow) ? $cardsPerRow : $MAXIMUM_CARDS_PER_ROW;
 ?>
 
 <div class="container">
@@ -90,7 +88,9 @@
                 foreach ($cards as $card) : ?>
                     <div class="card">
                         <a href="/cards/details/<?= $card['id']; ?>" target="_blank">
-                            <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
+                            <div class="card-image-wrapper">
+                                <img class="card-image" src="<?= $card['images']['small'] ?>" alt="<?= $card['name'] ?>">
+                            </div>
                             <div class="card-info">
                                 <p class="card-info-text"><?= "<strong class='card-set-name'>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
                                 <?php if ($isCollection) : ?>
@@ -196,18 +196,28 @@
     const MODAL_IMAGE = document.getElementById('modal-image');
     const MODAL_CLOSE_BUTTON = document.getElementById('modal-close');
     const DELETE_BUTTONS = document.querySelectorAll('.delete-button');
+    const USER_SPECIFIED_CARDS_PER_ROW = <?= var_export($userSetCardsPerRow, true); ?>;
     let displaySelectorValue = null;
     let cardsPerRow = null;
 
     // Event listener for when the page is fully loaded
     window.onload = (event) => {
         // Initialize values
-        DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
-        CARDS_PER_ROW_SELECTOR.value = <?= $cardsPerRow ?>;
+        cardsPerRow = <?= $cardsPerRow ?>;
+
+        if (!USER_SPECIFIED_CARDS_PER_ROW) {
+            if (checkIsMobile()) {
+                cardsPerRow = 2;
+            }
+        } 
 
         // Apply card layout based on initial values
-        CARDS_CONTAINER.style.setProperty('--cards-per-row', <?= $cardsPerRow ?>);
+        CARDS_CONTAINER.style.setProperty('--cards-per-row', cardsPerRow);
         updateCardMaxWidth();
+
+        // Update display values in the selectors
+        DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
+        CARDS_PER_ROW_SELECTOR.value = cardsPerRow
 
         // Event listener for image clicks in table view
         document.querySelectorAll('.pretty-table img').forEach((image) => {
@@ -317,11 +327,6 @@
         CARDS_CONTAINER.style.setProperty('--max-width', maxWidth + 'vw');
     }
 
-    // Set the display selector and cards per row selector values
-    DISPLAY_SELECTOR.value = <?= $displaySelectorValue ?>;
-    CARDS_PER_ROW_SELECTOR.value = <?= $cardsPerRow ?>;
-    CARDS_CONTAINER.style.setProperty('--cards-per-row', <?= isset($_GET['cards_per_row']) ? $_GET['cards_per_row'] : 5 ?>);
-
     /**
      * Sort the table by the column index.
      * 
@@ -371,5 +376,14 @@
         });
 
         table.replaceChild(newTbody, table.tBodies[0]);
+    }
+
+    /**
+     * Checks if the user is on a mobile device (or at minimum is on a small viewport)
+     * 
+     * @returns {boolean} True if on mobile, False if not.
+     */
+    function checkIsMobile() {
+        return window.innerWidth <= 768
     }
 </script>
