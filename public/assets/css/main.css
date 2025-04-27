@@ -92,6 +92,10 @@ h2:hover .copy {
     background-color: #ffdd57;
 }
 
+.is-info {
+    background-color: #209cee;
+}
+
 .notification-close {
     cursor: pointer;
     float: right;

@@ -137,11 +137,45 @@ function addToCollection() {
         xhr.send(formData);
 
         xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                createNotification("Card successfully added to the collection!", "is-success");
-            } else if (this.readyState == 4 && this.status == 400) {
-                createNotification("Card could not be added to the collection: " + JSON.parse(this.responseText).message, "is-danger");
-            }  
+            if (this.readyState == 4) { // operation complete 
+                if (this.status == 200) { // successful add
+                    createNotification("Card successfully added to the collection!", "is-success");
+                } else if (this.status == 400) { // error of some kind
+                    let response = JSON.parse(this.responseText);
+
+                    // If the response is asking for confirmation, prompt the user
+                    if (response.confirm_required) {
+                        if (confirm(`${response.message} Would you still like to add it to the collection ${collectionSelect[collectionSelect.selectedIndex].text}?`)) {
+                            // Create new form and append relevant data
+                            let xhrForce = new XMLHttpRequest();
+                            let formDataForce = new FormData();
+                            formDataForce.append("collection_id", collectionId);
+                            formDataForce.append("card_id", document.getElementById("card_id").value);
+                            formDataForce.append("user_id", "<?= session()->get('uid') ?>");
+                            formDataForce.append("force_add", true);
+                            xhrForce.open("POST", url);
+                            xhrForce.send(formDataForce);
+
+                            xhrForce.onreadystatechange = function() {
+                                if (this.readyState == 4) {
+                                    if (this.status == 200) {
+                                        createNotification("Card successfully added to the collection after additional confirmation!", "is-success");
+                                    } else {
+                                        var forceResponse = JSON.parse(this.responseText);
+                                        createNotification("Failed after confirmation: " + forceResponse.message, "is-danger");
+                                    }
+                                }
+                            }
+                        } else {
+                            createNotification("You rejected adding card to collection.", "is-info");
+                        }
+                    } else {
+                        createNotification("Card could not be added to the collection: " + response.message, "is-danger");
+                    }
+                } else {
+                    createNotification("An unexpected error occurred: " + this.statusText, "is-danger");
+                }
+            }
         }
     }
 }

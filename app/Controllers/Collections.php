@@ -170,6 +170,7 @@ class Collections extends BaseController {
         $cardId = $this->request->getPost('card_id');
         $collectionId = $this->request->getPost('collection_id');
         $userId = $this->request->getPost('user_id');
+        $forceAdd = $this->request->getPost('force_add') ?? false;
 
         // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
@@ -185,6 +186,27 @@ class Collections extends BaseController {
         if ($this->collectionCardModel()->cardInCollection($cardId, $collectionId)) {
             return $this->respond(["status" => "error", "message" => "Card already in collection!"], 400);
         }
+
+        // Ensure that the card is not already in any of the user's collections, unless the "force" value is set 
+        if (!$forceAdd) {
+            $cardInAnotherCollection = $this->collectionModel()->checkIfCardIsAlreadyInACollection($userId, $cardId);
+            if ($cardInAnotherCollection['found']) {
+                // Collect all collection names into an array
+                $collectionNames = array_map(function($collection) {
+                    return $collection['collection_name'];
+                }, $cardInAnotherCollection['collections']);
+
+                // Implode array into a single string separated by comma and space
+                $collectionNamesString = implode(', ', $collectionNames);
+
+                return $this->respond([
+                    "status" => "error", 
+                    "message" => "This card is already in the following collection(s): \"$collectionNamesString\" .",
+                    "confirm_required" => true
+                ], 400);
+            }
+        }
+
 
         try {
             // Add the card to the collection

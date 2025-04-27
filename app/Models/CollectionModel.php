@@ -95,4 +95,34 @@ class CollectionModel extends Model
             'okta_id' => $userId
         ]);
     }
+
+    /** 
+     * Checks if a card is already in any of the collections of a user 
+     */
+    public function checkIfCardIsAlreadyInACollection($uid, $cardId) 
+    {
+        $collectionCardModel = model(CollectionCardModel::class);
+        $collections = $this->where('okta_id', $uid)->findAll();
+        $foundCollections = [];
+
+        foreach ($collections as $collection) {
+            if ($collectionCardModel->cardInCollection($cardId, $collection['id'])) {
+                $foundCollections[] = [
+                    'collection_id' => $collection['id'],
+                    'collection_name' => $collection['name']
+                ];
+            }
+        }
+        
+        if (!empty($foundCollections)) {
+            return [
+                'found' => true,
+                'collections' => $foundCollections
+            ];
+        } else {
+            return [
+                'found' => false
+            ];
+        }
+    }
 }
