@@ -167,7 +167,7 @@ class Users extends BaseController {
             echo view('profile', [
                 'username' => session()->get('username'),
                 'uid' => session()->get('uid'),
-                'collections' => session()->get('isAdmin') === "true" ? $this->collectionModel()->getAllCollections() : $this->userModel()->getUserCollections(session()->get('uid'))
+                'collections' => session()->get('isAdmin') === "true" ? $this->collectionModel()->getAllCollections() : $this->CollectionModel()->getUserCollections(session()->get('uid'))
             ]);
             return view('fragments/footer');
         }
