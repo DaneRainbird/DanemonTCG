@@ -10,10 +10,10 @@
             <div class="series-sets collections">
                 <?php foreach ($collections as $collection) : ?>
                     <div class="set-container">
-                        <a href="/collections/view/<?= $collection->id ?>">
+                        <a href="/collections/view/<?= $collection['id'] ?>">
                             <div class="set">
                                 <div class="set-info">
-                                    <p><strong><?= $collection->name ?></strong></p>
+                                    <p><strong><?= $collection['name'] ?></strong></p>
                                 </div>
                             </div>
                         </a>
