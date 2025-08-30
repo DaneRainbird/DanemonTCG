@@ -32,6 +32,7 @@
          */
         public function __construct() {
             Pokemon::ApiKey(env("pokemon.apikey"));
+            Pokemon::ApiUrl(env("pokemon.apiurl"));
         }
 
         /**
