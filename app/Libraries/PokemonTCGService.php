@@ -43,7 +43,7 @@
          */
         private function parseQuery(string $query): array {
             $parsedQuery = [];
-            $pattern = '/(\w[\w.]*):(".*?"|\S+)/';
+            $pattern = '/(\w[\w.]*):(?:(["\'])(.*?)\2|\S+)/';
         
             // Find all query parts
             preg_match_all($pattern, $query, $matches, PREG_SET_ORDER);
@@ -51,7 +51,8 @@
             // Loop through the query parts and parse them
             foreach ($matches as $match) {
                 $keyword = $match[1];
-                $value = trim($match[2], '"');
+                // If we matched a quoted string, wrap it in double quotes for the API, otherwise use the raw value
+                $value = isset($match[3]) ? '"' . $match[3] . '"' : trim($match[0], $keyword . ':');
 
                 if (in_array($keyword, $this->knownQueryKeywords)) {
 
