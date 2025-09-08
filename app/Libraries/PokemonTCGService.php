@@ -51,8 +51,8 @@
             // Loop through the query parts and parse them
             foreach ($matches as $match) {
                 $keyword = $match[1];
-                // If we matched a quoted string, wrap it in double quotes for the API, otherwise use the raw value
-                $value = isset($match[3]) ? '"' . $match[3] . '"' : trim($match[0], $keyword . ':');
+                    // If we matched a quoted string, wrap it in double quotes for the API, otherwise use the raw value
+                    $value = isset($match[3]) ? '"' . $match[3] . '"' : substr($match[0], strlen($keyword) + 1);
 
                 if (in_array($keyword, $this->knownQueryKeywords)) {
 
