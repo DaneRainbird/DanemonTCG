@@ -61,7 +61,7 @@ class Collections extends BaseController {
         $numResultsToDisplay = 1;
         
         // If the cards_per_row value is not set
-        if (!$this->request->getGet('cards_per_row')) {
+        if (!$this->request->getVar('cards_per_row')) {
             if ($collectionCardCount <= 5 && $collectionCardCount > 0) {
                 $numResultsToDisplay = $collectionCardCount;
             } else {
@@ -69,7 +69,7 @@ class Collections extends BaseController {
             }
             $userSetCardsPerRow = false;
         } else {
-            $numResultsToDisplay = $this->request->getGet('cards_per_row');
+            $numResultsToDisplay = $this->request->getVar('cards_per_row');
             $userSetCardsPerRow = true;
         }
         
@@ -89,7 +89,99 @@ class Collections extends BaseController {
             'searchQuery' => '',
             'isSearch' => false,
             'isCollection' => true,
-            'view' => $this->request->getGet('view') === 'table' ? 'table' : 'grid',
+            'view' => $this->request->getVar('view') === 'table' ? 'table' : 'grid',
+            'cardsPerRow' => $numResultsToDisplay,
+            'userSetCardsPerRow' => $userSetCardsPerRow
+        ]);
+        return view('fragments/footer');
+    }
+
+    public function search() {
+        // Ensure that the user is signed in
+        if (!$this->session->get('uid')) {
+            session()->setFlashdata('error', 'You must be signed in to view this page!');
+            return redirect()->to('/');
+        }
+
+        // Get the search query
+        $searchQuery = $this->request->getVar('value');
+        if (!$searchQuery) {
+            session()->setFlashdata('error', 'No search query provided!');
+            return redirect()->to('/profile');
+        }
+
+        // Get all of the user's collections
+        $collections = $this->collectionModel()->getUserCollections($this->session->get('uid'));
+        $collectionIds = array_map(function($collection) {
+            return $collection['id'];
+        }, $collections);
+
+        // Get all cards in all collections for the user, and map card_id => [collection_id, ...]
+        $allCardsRaw = $this->collectionCardModel()->getAllCardsInCollections($this->session->get('uid'));
+        $cardToCollections = [];
+        foreach ($allCardsRaw as $row) {
+            $cid = $row['collection_id'];
+            $cardid = $row['card_id'];
+            if (!isset($cardToCollections[$cardid])) {
+                $cardToCollections[$cardid] = [];
+            }
+            $cardToCollections[$cardid][] = $cid;
+        }
+
+        // Fetch card details for each unique card_id
+        $cards = [];
+        foreach ($cardToCollections as $cardId => $collectionIds) {
+            $cardDetails = $this->pokemonTCGService->getCard($cardId, 'id,name,number,images,set');
+            $cardDetails['collection_ids'] = $collectionIds;
+            $cardDetails['collection_names'] = array_map(function($cid) {
+                return $this->collectionModel()->getCollectionName($cid);
+            }, $collectionIds);
+            $cards[] = $cardDetails;
+        }
+
+        // Filter cards by user search query (case-insensitive, matches name or set name)
+        if (!empty($searchQuery)) {
+            $search = strtolower($searchQuery);
+            $cards = array_filter($cards, function($card) use ($search) {
+                $nameMatch = isset($card['name']) && strpos(strtolower($card['name']), $search) !== false;
+                $setMatch = isset($card['set']['name']) && strpos(strtolower($card['set']['name']), $search) !== false;
+                return $nameMatch || $setMatch;
+            });
+            $cards = array_values($cards); // reindex
+        }
+
+        // Get number of cards in the results, and determine what the cards_per_row value should be
+        $numResultsToDisplay = 1;
+        
+        // If the cards_per_row value is not set
+        if (!$this->request->getVar('cards_per_row')) {
+            if (count($cards) <= 5 && count($cards) > 0) {
+                $numResultsToDisplay = count($cards);
+            } else {
+                $numResultsToDisplay = 5;
+            }
+            $userSetCardsPerRow = false;
+        } else {
+            $numResultsToDisplay = $this->request->getVar('cards_per_row');
+            $userSetCardsPerRow = true;
+        }
+
+        // Render the card search results view
+        echo view('fragments/html_head', [
+            'title' => 'Search Results',
+            'styles' => [
+                '/assets/css/main.css'
+            ]
+        ]);
+        echo view('fragments/header');
+        echo view('cards/results', [
+            'cards' => $cards,
+            'collectionId' => 'user-all',
+            'collectionName' => "All Collections",
+            'searchQuery' => $searchQuery,
+            'isSearch' => true,
+            'isCollection' => false,
+            'view' => $this->request->getVar('view') === 'table' ? 'table' : 'grid',
             'cardsPerRow' => $numResultsToDisplay,
             'userSetCardsPerRow' => $userSetCardsPerRow
         ]);
@@ -133,8 +225,8 @@ class Collections extends BaseController {
      */
     public function createCollection() {
         // Get form data
-        $collectionName = $this->request->getPost('collection_name');
-        $userId = $this->request->getPost('user_id');
+        $collectionName = $this->request->getVar('collection_name');
+        $userId = $this->request->getVar('user_id');
 
         // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
@@ -167,10 +259,10 @@ class Collections extends BaseController {
     */
     public function addToCollection() {
         // Get form data
-        $cardId = $this->request->getPost('card_id');
-        $collectionId = $this->request->getPost('collection_id');
-        $userId = $this->request->getPost('user_id');
-        $forceAdd = $this->request->getPost('force_add') ?? false;
+        $cardId = $this->request->getVar('card_id');
+        $collectionId = $this->request->getVar('collection_id');
+        $userId = $this->request->getVar('user_id');
+        $forceAdd = $this->request->getVar('force_add') ?? false;
 
         // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {
@@ -230,9 +322,9 @@ class Collections extends BaseController {
      */
     public function removeFromCollection() {
         // Get form data
-        $cardId = $this->request->getPost('card_id');
-        $collectionId = $this->request->getPost('collection_id');
-        $userId = $this->request->getPost('user_id');
+        $cardId = $this->request->getVar('card_id');
+        $collectionId = $this->request->getVar('collection_id');
+        $userId = $this->request->getVar('user_id');
 
                 // Ensure that the user is signed in, and that the signed in uid matches the uid in the form
         if (!$this->session->get('uid') || $this->session->get('uid') != $userId) {

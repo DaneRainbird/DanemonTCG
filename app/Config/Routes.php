@@ -37,6 +37,7 @@ $routes->post('/collections/removeCardFromCollection', 'Collections::removeFromC
 $routes->post('/collections/createCollection', 'Collections::createCollection');
 $routes->get('/collections/view/(:any)', 'Collections::view/$1');
 $routes->get('/collections/viewAll', 'Collections::viewAll');
+$routes->get('/collections/search', 'Collections::search');
 
 // Other / assorted routes
 $routes->get('/about', 'Home::about');

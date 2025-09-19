@@ -93,6 +93,9 @@
                             </div>
                             <div class="card-info">
                                 <p class="card-info-text"><?= "<strong class='card-set-name'>" . $card['set']['name'] . '</strong><br/><em>' . $card['number'] . '/' . $card['set']['total'] . '</em>'; ?></p>
+                                <?php if ($isSearch && !empty($card['collection_names'])) : ?>
+                                    <p class="card-collections"><small>In collections: <?= htmlspecialchars(implode(', ', $card['collection_names'])) ?></small></p>
+                                <?php endif; ?>
                                 <?php if ($isCollection) : ?>
                                     <a class="delete-button" data-card-id="<?= $card['id']; ?>" target="_blank">Remove from Collection?</a>
                                 <?php endif; ?>
@@ -127,7 +130,12 @@
                             <td><?= $card['name'] ?></td>
                             <td><?= $card['set']['name'] ?></td>
                             <td><?= $card['number'] . '/' . $card['set']['total'] ?></td>
-                            <td><a class="view-button" href="/cards/details/<?= $card['id']; ?>" target="_blank">View Card</a></td>
+                            <td>
+                                <a class="view-button" href="/cards/details/<?= $card['id']; ?>" target="_blank">View Card</a>
+                                <?php if ($isSearch && !empty($card['collection_names'])) : ?>
+                                    <br/><small>In: <?= htmlspecialchars(implode(', ', $card['collection_names'])) ?></small>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
